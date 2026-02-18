@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Polski Trener — Грамматика A1–B1</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', 'Helvetica Neue', sans-serif; background: linear-gradient(135deg, #fafaf6 0%, #f0ede4 100%); color: #2d2d2d; }
+  #root { min-height: 100vh; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useCallback } = React;
+
+const TOPICS = [
+  {
+    id: "conjugation", icon: "🔄", title: "Спряжение глаголов", color: "#2d6a4f",
+    cards: [
+      { q: "pracować → Ola i Daniel ... (oni)", a: "pracują", hint: "-ują (I спряжение)" },
+      { q: "chodzić → Często ... po górach (ja)", a: "chodzę", hint: "-ę (II спряжение)" },
+      { q: "zamawiać → Oni ... jedzenie (oni)", a: "zamawiają", hint: "-ają" },
+      { q: "wiedzieć → Oni nie ... jak dojść (oni)", a: "wiedzą", hint: "неправильный глагол" },
+      { q: "mieć → 80% Polaków ... zwierzę (oni)", a: "ma", hint: "80% + ед.число глагола" },
+    ]
+  },
+  {
+    id: "znac_wiedziec", icon: "🧠", title: "znać vs wiedzieć", color: "#7b2cbf",
+    cards: [
+      { q: "Julia ... język hiszpański.\n(a) zna  (b) wie", a: "zna", hint: "znać + сущ. (что-то конкретное)" },
+      { q: "Oni nie ..., jak dojść do parku.\n(a) znają  (b) wiedzą", a: "wiedzą", hint: "wiedzieć + придаточное (jak/że/co)" },
+      { q: "... pan tę restaurację?\n(a) Zna  (b) Wie", a: "Zna", hint: "знать кого/что → znać" },
+      { q: "Nie ..., o której zaczyna się film.\n(a) znam  (b) wiem", a: "wiem", hint: "знать (информацию) → wiedzieć" },
+    ]
+  },
+  {
+    id: "narzednik", icon: "🔧", title: "Творительный (Narzędnik)", color: "#e36414",
+    cards: [
+      { q: "Mój brat jest ... ... (początkujący programista)", a: "początkującym programistą", hint: "być + Narzędnik" },
+      { q: "Do pracy jadę ... (hulajnoga)", a: "hulajnogą", hint: "-a → -ą" },
+      { q: "Latte z ... ... (mleko roślinne)", a: "mlekiem roślinnym", hint: "z + Narzędnik, -o → -em, -e → -ym" },
+      { q: "Jeździlibyście ... (tramwaj)", a: "tramwajem", hint: "средство транспорта = Narzędnik" },
+    ]
+  },
+  {
+    id: "dopelniacz", icon: "📉", title: "Родительный (Dopełniacz)", color: "#d62828",
+    cards: [
+      { q: "Nie lubię ... ... (mocna kawa)", a: "mocnej kawy", hint: "nie + lubić + Dopełniacz" },
+      { q: "brakiem ... na bilety (pieniądze)", a: "pieniędzy", hint: "Мн.ч. Dopełniacz" },
+      { q: "Od ... pożyczyłeś? (kto)", a: "kogo", hint: "od + Dopełniacz" },
+      { q: "Z powodu ... (choroba)", a: "choroby", hint: "z powodu + Dopełniacz" },
+      { q: "Dzisiaj nie ma ... ... (troje studentów)", a: "trojga studentów", hint: "troje → trojga в Dopełniacz" },
+    ]
+  },
+  {
+    id: "miejscownik", icon: "📍", title: "Местный (Miejscownik)", color: "#0077b6",
+    cards: [
+      { q: "Mieszkamy w ... (Szwecja)", a: "Szwecji", hint: "-ja → -ji" },
+      { q: "Byłam w ... ... (nowa kawiarnia)", a: "nowej kawiarni", hint: "-a → -ej, -ia → -i" },
+      { q: "Parki w moim ... (miasto)", a: "mieście", hint: "-o → -ście (чередование)" },
+      { q: "Spotkaniu o ... ... (08:30)", a: "ósmej trzydzieści", hint: "o + порядковое числит. в Miejscownik" },
+    ]
+  },
+  {
+    id: "celownik", icon: "🎯", title: "Дательный (Celownik)", color: "#4361ee",
+    cards: [
+      { q: "Sara napisała ... (ja) co się wydarzyło", a: "mi", hint: "написала кому? → mi" },
+      { q: "Ufam moim ... (przyjaciel, мн.ч.)", a: "przyjaciołom", hint: "Celownik мн.ч. -om" },
+      { q: "Świat był przeciwko ... (ty)", a: "tobie", hint: "przeciwko + Celownik" },
+    ]
+  },
+  {
+    id: "past_tense", icon: "⏪", title: "Прошедшее время", color: "#6a040f",
+    cards: [
+      { q: "Wczoraj dzieci ... bajki (oglądać)", a: "oglądały", hint: "dzieci = niemęskoosobowe → -ły" },
+      { q: "Moi dziadkowie ... się w 1965\n(a) pobrali  (b) ożenili  (c) wyszli za mąż", a: "pobrali", hint: "пара → pobrać się" },
+      { q: "Na czele urzędu ... Julia Nowak (stanąć)", a: "stanęła", hint: "она → -ęła" },
+      { q: "Od kiedy ... nowy most (zbudować)", a: "zbudowano", hint: "безличная форма → -no/-to" },
+    ]
+  },
+  {
+    id: "conditional", icon: "💭", title: "Условное + żeby", color: "#457b9d",
+    cards: [
+      { q: "Gdybyście mieli kartę, ... tramwajem (jeździć, wy)", a: "jeździlibyście", hint: "прош.вр. + byście" },
+      { q: "Proszę, żebyś ... ze mną (pójść, ty)", a: "poszedł/poszła", hint: "żebyś + прош.вр." },
+      { q: "Chciałby, ... (my) częściej spotykali się (żeby)", a: "żebyśmy", hint: "żeby + śmy → żebyśmy" },
+    ]
+  },
+  {
+    id: "ktory", icon: "🔗", title: "Который (który)", color: "#52796f",
+    cards: [
+      { q: "Ludzie, ... jedzą zdrowo (który, лич.-муж. мн.)", a: "którzy", hint: "лично-мужская форма мн.ч." },
+      { q: "Osoby, ... tego nie robią (który, жен. мн.)", a: "które", hint: "немужская форма мн.ч." },
+      { q: "Mężczyzna, ... tu mieszka (który)", a: "który", hint: "муж. ед.ч. именительный" },
+    ]
+  },
+  {
+    id: "comparison", icon: "⚖️", title: "Степени сравнения", color: "#bc6c25",
+    cards: [
+      { q: "Amazonka jest ... rzeką niż Wisła (długi, сравнит.)", a: "dłuższą", hint: "długi → dłuższy, + Narzędnik → dłuższą" },
+      { q: "Piotr gra ... z całej grupy (dobrze, превосх.)", a: "najlepiej", hint: "dobrze → lepiej → najlepiej" },
+      { q: "Jej koledzy są bardzo ... (miły, мн. лич.-муж.)", a: "mili", hint: "miły → mili (лично-мужская)" },
+    ]
+  },
+  {
+    id: "numbers", icon: "🔢", title: "Числительные", color: "#6d6875",
+    cards: [
+      { q: "74 − 23 = ? (словами)", a: "pięćdziesiąt jeden", hint: "50 + 1" },
+      { q: "1956 год (w ... roku)", a: "tysiąc dziewięćset pięćdziesiątym szóstym", hint: "Miejscownik порядкового" },
+      { q: "Mają ... dzieci (3, собират.)", a: "troje", hint: "дети → собирательное числит." },
+      { q: "Film dozwolony od ... (12 lat)", a: "dwunastu lat", hint: "od + Dopełniacz" },
+    ]
+  },
+  {
+    id: "idioms", icon: "💬", title: "Идиомы и лексика", color: "#5a189a",
+    cards: [
+      { q: "Kasia ma świetne pomysły — ma ...\n(a) głowę na karku  (b) pstro w głowie", a: "głowę na karku", hint: "= смекалистая, с головой" },
+      { q: "Zarabia mało. Pracuje ...\n(a) za pół darmo  (b) na czarno  (c) jak szalony", a: "za pół darmo", hint: "мало = почти бесплатно" },
+      { q: "Ma 15 kg ...\n(a) nadwagi  (b) wagi  (c) przewagi", a: "nadwagi", hint: "лишний вес = nadwaga" },
+      { q: "Wysyłam serdeczne ... z wakacji\n(a) witania  (b) pozdrowienia  (c) życzenia", a: "pozdrowienia", hint: "приветы с отдыха" },
+      { q: "Niczego się nie ...\n(a) przerobił  (b) dorobił  (c) zrobił", a: "dorobił", hint: "dorobić się = нажить, заработать" },
+      { q: "Lena ma ... zdać egzamin (nadzieja)", a: "nadzieję", hint: "mieć nadzieję = надеяться" },
+    ]
+  },
+  {
+    id: "po_zdaniu", icon: "⏭️", title: "po + отглагольное сущ.", color: "#3a5a40",
+    cards: [
+      { q: "Zaczniemy wakacje po ... egzaminów (zdać)", a: "zdaniu", hint: "po + Miejscownik от zdanie" },
+      { q: "Przyszedł spóźniony, ale ... (uczesać się)", a: "uczesany", hint: "причастие = состояние" },
+      { q: "Ona mówi, że to przez ... (on)", a: "niego", hint: "przez + Biernik (после предлога → niego)" },
+    ]
+  },
+];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function ProgressRing({ pct, size = 44, stroke = 4, color }) {
+  const r = (size - stroke) / 2;
+  const c = 2 * Math.PI * r;
+  return (
+    <svg width={size} height={size} style={{ transform: "rotate(-90deg)" }}>
+      <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="rgba(0,0,0,0.08)" strokeWidth={stroke} />
+      <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth={stroke}
+        strokeDasharray={c} strokeDashoffset={c * (1 - pct)} strokeLinecap="round"
+        style={{ transition: "stroke-dashoffset 0.5s ease" }} />
+    </svg>
+  );
+}
+
+function App() {
+  const [mode, setMode] = useState("menu");
+  const [topicId, setTopicId] = useState(null);
+  const [cardIdx, setCardIdx] = useState(0);
+  const [flipped, setFlipped] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+  const [quizCards, setQuizCards] = useState([]);
+  const [userAnswer, setUserAnswer] = useState("");
+  const [quizResult, setQuizResult] = useState(null);
+  const [score, setScore] = useState({ correct: 0, wrong: 0, answers: [] });
+  const [topicScores, setTopicScores] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("polskiScores") || "{}"); } catch { return {}; }
+  });
+  const [allTopicsMode, setAllTopicsMode] = useState(false);
+
+  useEffect(() => {
+    try { localStorage.setItem("polskiScores", JSON.stringify(topicScores)); } catch {}
+  }, [topicScores]);
+
+  const topic = TOPICS.find(t => t.id === topicId);
+  const cards = topic?.cards || [];
+
+  const startLearn = (id) => { setTopicId(id); setCardIdx(0); setFlipped(false); setShowHint(false); setMode("learn"); setAllTopicsMode(false); };
+  const startQuiz = (id) => { const t = TOPICS.find(t => t.id === id); setTopicId(id); setQuizCards(shuffle(t.cards)); setCardIdx(0); setUserAnswer(""); setQuizResult(null); setScore({ correct: 0, wrong: 0, answers: [] }); setMode("quiz"); setAllTopicsMode(false); };
+  const startAllQuiz = () => { const all = TOPICS.flatMap(t => t.cards.map(c => ({ ...c, topicId: t.id, topicTitle: t.title }))); setQuizCards(shuffle(all).slice(0, 20)); setTopicId(null); setCardIdx(0); setUserAnswer(""); setQuizResult(null); setScore({ correct: 0, wrong: 0, answers: [] }); setMode("quiz"); setAllTopicsMode(true); };
+
+  const checkAnswer = () => {
+    const card = quizCards[cardIdx];
+    const correct = userAnswer.trim().toLowerCase() === card.a.toLowerCase() || card.a.toLowerCase().split("/").some(v => userAnswer.trim().toLowerCase() === v.trim());
+    setQuizResult(correct ? "correct" : "wrong");
+    setScore(s => ({ correct: s.correct + (correct ? 1 : 0), wrong: s.wrong + (correct ? 0 : 1), answers: [...s.answers, { card, userAnswer: userAnswer.trim(), correct }] }));
+  };
+
+  const nextQuizCard = () => {
+    if (cardIdx + 1 >= quizCards.length) {
+      const pct = Math.round((score.correct / quizCards.length) * 100);
+      if (topicId) setTopicScores(s => ({ ...s, [topicId]: Math.max(s[topicId] || 0, pct) }));
+      setMode("results");
+    } else { setCardIdx(i => i + 1); setUserAnswer(""); setQuizResult(null); setShowHint(false); }
+  };
+
+  const handleKeyDown = useCallback((e) => {
+    if (mode === "quiz" && e.key === "Enter") { if (quizResult) nextQuizCard(); else if (userAnswer.trim()) checkAnswer(); }
+    if (mode === "learn") {
+      if (e.key === " " || e.key === "Enter") { e.preventDefault(); setFlipped(f => !f); }
+      if (e.key === "ArrowRight" && cardIdx < cards.length - 1) { setCardIdx(i => i + 1); setFlipped(false); setShowHint(false); }
+      if (e.key === "ArrowLeft" && cardIdx > 0) { setCardIdx(i => i - 1); setFlipped(false); setShowHint(false); }
+    }
+  }, [mode, quizResult, userAnswer, cardIdx, cards.length]);
+
+  useEffect(() => { window.addEventListener("keydown", handleKeyDown); return () => window.removeEventListener("keydown", handleKeyDown); }, [handleKeyDown]);
+
+  const S = { container: { minHeight: "100vh", padding: 20 } };
+
+  // ── MENU ──
+  if (mode === "menu") return (
+    <div style={S.container}>
+      <div style={{ maxWidth: 720, margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
+          <div style={{ fontSize: 42, fontWeight: 800, letterSpacing: -1, color: "#1a1a1a", marginBottom: 4 }}>🇵🇱 Polski Trener</div>
+          <div style={{ fontSize: 15, color: "#888", letterSpacing: 2, textTransform: "uppercase" }}>Грамматика A1–B1 — карточки и квиз</div>
+        </div>
+        <button onClick={startAllQuiz} style={{ width: "100%", padding: "16px 24px", marginBottom: 28, background: "linear-gradient(135deg, #2d6a4f, #40916c)", color: "#fff", border: "none", borderRadius: 14, cursor: "pointer", fontSize: 17, fontWeight: 700, boxShadow: "0 4px 20px rgba(45,106,79,0.3)" }}>
+          🎲 Случайный квиз — 20 вопросов из всех тем
+        </button>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 12 }}>
+          {TOPICS.map(t => {
+            const best = topicScores[t.id];
+            return (
+              <div key={t.id} style={{ background: "#fff", borderRadius: 14, padding: "16px 18px", boxShadow: "0 2px 12px rgba(0,0,0,0.06)", border: `2px solid ${best >= 80 ? "#c8e6c9" : best >= 50 ? "#fff3e0" : "transparent"}` }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                  <div><span style={{ fontSize: 20, marginRight: 8 }}>{t.icon}</span><span style={{ fontWeight: 700, fontSize: 14, color: t.color }}>{t.title}</span></div>
+                  {best !== undefined && <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}><ProgressRing pct={best/100} color={best >= 80 ? "#4caf50" : best >= 50 ? "#ff9800" : "#e53935"} /><span style={{ position: "absolute", fontSize: 11, fontWeight: 700, color: "#555" }}>{best}%</span></div>}
+                </div>
+                <div style={{ fontSize: 12, color: "#999", marginBottom: 12 }}>{t.cards.length} карточек</div>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <button onClick={() => startLearn(t.id)} style={{ flex: 1, padding: "8px 0", border: `1.5px solid ${t.color}`, background: "transparent", color: t.color, borderRadius: 8, cursor: "pointer", fontWeight: 600, fontSize: 13 }}>📖 Учить</button>
+                  <button onClick={() => startQuiz(t.id)} style={{ flex: 1, padding: "8px 0", border: "none", background: t.color, color: "#fff", borderRadius: 8, cursor: "pointer", fontWeight: 600, fontSize: 13 }}>✏️ Квиз</button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+
+  // ── LEARN ──
+  if (mode === "learn") {
+    const card = cards[cardIdx]; const color = topic.color;
+    return (
+      <div style={S.container}>
+        <div style={{ maxWidth: 560, margin: "0 auto" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+            <button onClick={() => setMode("menu")} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 15, color: "#888", fontWeight: 600 }}>← Назад</button>
+            <span style={{ fontSize: 14, color: "#aaa" }}>{cardIdx + 1} / {cards.length}</span>
+          </div>
+          <div style={{ textAlign: "center", marginBottom: 8 }}><span style={{ fontSize: 28 }}>{topic.icon}</span><span style={{ fontSize: 18, fontWeight: 700, color, marginLeft: 10 }}>{topic.title}</span></div>
+          <div style={{ height: 4, background: "#e0e0e0", borderRadius: 2, marginBottom: 28 }}><div style={{ height: 4, background: color, borderRadius: 2, width: `${((cardIdx+1)/cards.length)*100}%`, transition: "width 0.3s" }} /></div>
+          <div onClick={() => setFlipped(f => !f)} style={{ background: flipped ? color : "#fff", color: flipped ? "#fff" : "#2d2d2d", borderRadius: 20, padding: "48px 36px", minHeight: 220, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: "0 8px 40px rgba(0,0,0,0.1)", transition: "all 0.35s ease" }}>
+            {!flipped ? (<><div style={{ fontSize: 20, fontWeight: 600, lineHeight: 1.6, textAlign: "center", whiteSpace: "pre-line" }}>{card.q}</div><div style={{ marginTop: 20, fontSize: 13, color: "#bbb" }}>Нажми, чтобы увидеть ответ</div></>) : (<><div style={{ fontSize: 13, opacity: 0.7, marginBottom: 10, textTransform: "uppercase", letterSpacing: 1 }}>Ответ</div><div style={{ fontSize: 28, fontWeight: 800, textAlign: "center" }}>{card.a}</div><div style={{ fontSize: 14, opacity: 0.8, marginTop: 16, textAlign: "center", fontStyle: "italic" }}>{card.hint}</div></>)}
+          </div>
+          {!flipped && <div style={{ textAlign: "center", marginTop: 16 }}><button onClick={e => { e.stopPropagation(); setShowHint(h => !h); }} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "#aaa" }}>{showHint ? `💡 ${card.hint}` : "💡 Подсказка"}</button></div>}
+          <div style={{ display: "flex", justifyContent: "center", gap: 16, marginTop: 28 }}>
+            <button disabled={cardIdx === 0} onClick={() => { setCardIdx(i => i - 1); setFlipped(false); setShowHint(false); }} style={{ padding: "12px 28px", borderRadius: 10, border: "1.5px solid #ddd", background: "#fff", cursor: cardIdx === 0 ? "default" : "pointer", opacity: cardIdx === 0 ? 0.4 : 1, fontWeight: 600, fontSize: 15 }}>◀ Назад</button>
+            <button disabled={cardIdx === cards.length - 1} onClick={() => { setCardIdx(i => i + 1); setFlipped(false); setShowHint(false); }} style={{ padding: "12px 28px", borderRadius: 10, border: "none", background: color, color: "#fff", cursor: cardIdx === cards.length - 1 ? "default" : "pointer", opacity: cardIdx === cards.length - 1 ? 0.4 : 1, fontWeight: 600, fontSize: 15 }}>Далее ▶</button>
+          </div>
+          <div style={{ textAlign: "center", marginTop: 20, fontSize: 12, color: "#bbb" }}>Пробел — перевернуть · ← → — навигация</div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── QUIZ ──
+  if (mode === "quiz") {
+    const card = quizCards[cardIdx]; const color = allTopicsMode ? "#2d6a4f" : topic.color;
+    const isMultiChoice = card.q.includes("(a)") || card.q.includes("(b)");
+    const options = isMultiChoice ? card.q.split("\n").slice(1).join(" ").match(/\(([a-c])\)\s*([^(]+)/g)?.map(m => { const match = m.match(/\(([a-c])\)\s*(.+)/); return match ? { letter: match[1], text: match[2].trim() } : null; }).filter(Boolean) : [];
+
+    return (
+      <div style={S.container}>
+        <div style={{ maxWidth: 560, margin: "0 auto" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+            <button onClick={() => setMode("menu")} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 15, color: "#888", fontWeight: 600 }}>← Выйти</button>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <span style={{ fontSize: 14, color: "#4caf50", fontWeight: 700 }}>✓ {score.correct}</span>
+              <span style={{ fontSize: 14, color: "#e53935", fontWeight: 700 }}>✗ {score.wrong}</span>
+              <span style={{ fontSize: 14, color: "#aaa" }}>{cardIdx + 1}/{quizCards.length}</span>
+            </div>
+          </div>
+          <div style={{ height: 4, background: "#e0e0e0", borderRadius: 2, marginBottom: 28 }}><div style={{ height: 4, background: color, borderRadius: 2, width: `${((cardIdx+1)/quizCards.length)*100}%`, transition: "width 0.3s" }} /></div>
+          {allTopicsMode && card.topicTitle && <div style={{ textAlign: "center", marginBottom: 8, fontSize: 12, color: "#999", letterSpacing: 1, textTransform: "uppercase" }}>{card.topicTitle}</div>}
+          <div style={{ background: "#fff", borderRadius: 20, padding: "36px 32px", boxShadow: "0 8px 40px rgba(0,0,0,0.08)", marginBottom: 24, borderTop: `4px solid ${color}` }}>
+            <div style={{ fontSize: 19, fontWeight: 600, lineHeight: 1.6, marginBottom: 24, whiteSpace: "pre-line" }}>{isMultiChoice ? card.q.split("\n")[0] : card.q}</div>
+            {isMultiChoice ? (
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {options.map(opt => {
+                  const isCorrect = opt.text.trim().toLowerCase() === card.a.toLowerCase();
+                  const isSelected = userAnswer === opt.text.trim();
+                  let bg = "#f8f8f8", border = "2px solid #e8e8e8";
+                  if (quizResult) { if (isCorrect) { bg = "#e8f5e9"; border = "2px solid #4caf50"; } else if (isSelected && !isCorrect) { bg = "#ffebee"; border = "2px solid #e53935"; } } else if (isSelected) { bg = "#e3f2fd"; border = `2px solid ${color}`; }
+                  return (<button key={opt.letter} disabled={!!quizResult} onClick={() => setUserAnswer(opt.text.trim())} style={{ padding: "14px 18px", borderRadius: 12, border, background: bg, cursor: quizResult ? "default" : "pointer", textAlign: "left", fontSize: 16, fontWeight: 500, transition: "all 0.15s", display: "flex", alignItems: "center", gap: 12 }}>
+                    <span style={{ width: 28, height: 28, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", background: isSelected ? color : "#e0e0e0", color: isSelected ? "#fff" : "#999", fontSize: 13, fontWeight: 700, flexShrink: 0 }}>{opt.letter}</span>{opt.text.trim()}
+                  </button>);
+                })}
+              </div>
+            ) : (
+              <input value={userAnswer} onChange={e => setUserAnswer(e.target.value)} disabled={!!quizResult} placeholder="Введи ответ..." autoFocus style={{ width: "100%", padding: "14px 18px", fontSize: 18, borderRadius: 12, border: `2px solid ${quizResult === "correct" ? "#4caf50" : quizResult === "wrong" ? "#e53935" : "#e0e0e0"}`, outline: "none", background: quizResult === "correct" ? "#e8f5e9" : quizResult === "wrong" ? "#ffebee" : "#fafafa", transition: "all 0.2s", boxSizing: "border-box" }} />
+            )}
+            {quizResult === "wrong" && <div style={{ marginTop: 16, padding: "12px 16px", background: "#fff3e0", borderRadius: 10, fontSize: 15 }}>Правильный ответ: <strong>{card.a}</strong><div style={{ fontSize: 13, color: "#888", marginTop: 4 }}>{card.hint}</div></div>}
+            {quizResult === "correct" && <div style={{ marginTop: 16, padding: "12px 16px", background: "#e8f5e9", borderRadius: 10, fontSize: 15, color: "#2e7d32" }}>✓ Правильно! <span style={{ fontSize: 13, color: "#888" }}>{card.hint}</span></div>}
+            {!showHint && !quizResult && <button onClick={() => setShowHint(true)} style={{ marginTop: 12, background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "#bbb" }}>💡 Подсказка</button>}
+            {showHint && !quizResult && <div style={{ marginTop: 12, fontSize: 13, color: "#999", fontStyle: "italic" }}>💡 {card.hint}</div>}
+          </div>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            {!quizResult ? (
+              <button onClick={checkAnswer} disabled={!userAnswer.trim()} style={{ padding: "14px 48px", borderRadius: 12, border: "none", background: userAnswer.trim() ? color : "#ccc", color: "#fff", cursor: userAnswer.trim() ? "pointer" : "default", fontWeight: 700, fontSize: 16, boxShadow: userAnswer.trim() ? `0 4px 20px ${color}44` : "none" }}>Проверить</button>
+            ) : (
+              <button onClick={nextQuizCard} style={{ padding: "14px 48px", borderRadius: 12, border: "none", background: color, color: "#fff", cursor: "pointer", fontWeight: 700, fontSize: 16, boxShadow: `0 4px 20px ${color}44` }}>{cardIdx + 1 >= quizCards.length ? "Результаты" : "Далее →"}</button>
+            )}
+          </div>
+          <div style={{ textAlign: "center", marginTop: 14, fontSize: 12, color: "#ccc" }}>Enter — проверить / далее</div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── RESULTS ──
+  if (mode === "results") {
+    const total = score.correct + score.wrong;
+    const pct = Math.round((score.correct / total) * 100);
+    const emoji = pct >= 90 ? "🏆" : pct >= 70 ? "👍" : pct >= 50 ? "💪" : "📚";
+    const message = pct >= 90 ? "Отлично!" : pct >= 70 ? "Хороший результат!" : pct >= 50 ? "Неплохо, но есть над чем поработать" : "Стоит повторить эту тему";
+    return (
+      <div style={S.container}>
+        <div style={{ maxWidth: 560, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 32 }}>
+            <div style={{ fontSize: 64, marginBottom: 8 }}>{emoji}</div>
+            <div style={{ fontSize: 48, fontWeight: 800, color: pct >= 70 ? "#2d6a4f" : pct >= 50 ? "#e36414" : "#d62828" }}>{pct}%</div>
+            <div style={{ fontSize: 18, fontWeight: 600, color: "#555", marginBottom: 4 }}>{message}</div>
+            <div style={{ fontSize: 14, color: "#aaa" }}>{score.correct} из {total} правильно</div>
+          </div>
+          {score.answers.filter(a => !a.correct).length > 0 && (
+            <div style={{ marginBottom: 28 }}>
+              <div style={{ fontSize: 15, fontWeight: 700, color: "#d62828", marginBottom: 12 }}>Ошибки — повтори:</div>
+              {score.answers.filter(a => !a.correct).map((a, i) => (
+                <div key={i} style={{ background: "#fff", borderRadius: 12, padding: "14px 18px", marginBottom: 8, borderLeft: "4px solid #e53935", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
+                  <div style={{ fontSize: 14, color: "#555", marginBottom: 6 }}>{a.card.q.split("\n")[0]}</div>
+                  <div style={{ fontSize: 13 }}><span style={{ color: "#e53935", textDecoration: "line-through" }}>{a.userAnswer}</span><span style={{ margin: "0 8px", color: "#ccc" }}>→</span><span style={{ color: "#2e7d32", fontWeight: 700 }}>{a.card.a}</span></div>
+                  <div style={{ fontSize: 12, color: "#aaa", marginTop: 4 }}>{a.card.hint}</div>
+                </div>
+              ))}
+            </div>
+          )}
+          <div style={{ display: "flex", gap: 12 }}>
+            <button onClick={() => setMode("menu")} style={{ flex: 1, padding: 14, borderRadius: 12, border: "2px solid #ddd", background: "#fff", cursor: "pointer", fontWeight: 700, fontSize: 15 }}>К темам</button>
+            <button onClick={() => { if (allTopicsMode) startAllQuiz(); else startQuiz(topicId); }} style={{ flex: 1, padding: 14, borderRadius: 12, border: "none", background: "#2d6a4f", color: "#fff", cursor: "pointer", fontWeight: 700, fontSize: 15 }}>Ещё раз</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  return null;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
