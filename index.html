@@ -43,11 +43,14 @@ function App(){
   var _sc=us({c:0,w:0,a:[]}),sc=_sc[0],sSC=_sc[1];
   var _ts=us(function(){try{return JSON.parse(localStorage.getItem("pt3")||"{}")}catch(x){return{}}}),ts=_ts[0],sTS=_ts[1];
   var _at=us(false),at=_at[0],sAT=_at[1];
+  var _tab=us("grammar"),tab=_tab[0],sTAB=_tab[1];
   ue(function(){try{localStorage.setItem("pt3",JSON.stringify(ts))}catch(x){}},[ts]);
-  var tp=T.find(function(t){return t.id===tId});var cs=tp?tp.cards:[];
+  var ALL=T.concat(L||[]);
+  var tp=ALL.find(function(t){return t.id===tId});var cs=tp?tp.cards:[];
   var tc=T.reduce(function(s,t){return s+t.cards.length},0);
+  var lc=(L||[]).reduce(function(s,t){return s+t.cards.length},0);
   function sL(id){sT(id);sCI(0);sFL(false);sSH(false);sM("learn");sAT(false)}
-  function sQ(id){var t=T.find(function(x){return x.id===id});sT(id);sQC(shuffle(t.cards));sCI(0);sUA("");sQR(null);sSC({c:0,w:0,a:[]});sM("quiz");sAT(false)}
+  function sQ(id){var t=ALL.find(function(x){return x.id===id});sT(id);sQC(shuffle(t.cards));sCI(0);sUA("");sQR(null);sSC({c:0,w:0,a:[]});sM("quiz");sAT(false)}
   function sAQ(){var all=T.flatMap(function(t){return t.cards.map(function(c){return Object.assign({},c,{tId:t.id,tT:t.title})})});sQC(shuffle(all).slice(0,25));sT(null);sCI(0);sUA("");sQR(null);sSC({c:0,w:0,a:[]});sM("quiz");sAT(true)}
   function chk(){var cd=qc[ci];var ok=ua.trim().toLowerCase()===cd.a.toLowerCase()||cd.a.toLowerCase().split("/").some(function(v){return ua.trim().toLowerCase()===v.trim()});sQR(ok?"c":"w");sSC(function(s){return{c:s.c+(ok?1:0),w:s.w+(ok?0:1),a:s.a.concat([{cd:cd,ua:ua.trim(),ok:ok}])}})}
   function nxt(){if(ci+1>=qc.length){var p=Math.round((sc.c/qc.length)*100);if(tId)sTS(function(s){var n={};for(var k in s)n[k]=s[k];n[tId]=Math.max(s[tId]||0,p);return n});sM("res")}else{sCI(function(i){return i+1});sUA("");sQR(null);sSH(false)}}
@@ -55,10 +58,18 @@ function App(){
   ue(function(){window.addEventListener("keydown",hk);return function(){window.removeEventListener("keydown",hk)}},[hk]);
   var S={c:{minHeight:"100vh",padding:20}};
 
+  function renderTopicGrid(list){return e("div",{style:{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))",gap:12}},list.map(function(t){var b=ts[t.id];return e("div",{key:t.id,style:{background:"#fff",borderRadius:14,padding:"16px 18px",boxShadow:"0 2px 12px rgba(0,0,0,0.06)",border:"2px solid "+(b>=80?"#c8e6c9":b>=50?"#fff3e0":"transparent")}},e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}},e("div",null,e("span",{style:{fontSize:20,marginRight:8}},t.icon),e("span",{style:{fontWeight:700,fontSize:14,color:t.color}},t.title)),b!==undefined&&e("div",{style:{position:"relative",display:"flex",alignItems:"center",justifyContent:"center"}},e(PR,{pct:b/100,color:b>=80?"#4caf50":b>=50?"#ff9800":"#e53935"}),e("span",{style:{position:"absolute",fontSize:11,fontWeight:700,color:"#555"}},b+"%"))),e("div",{style:{fontSize:12,color:"#999",marginBottom:12}},t.cards.length+" карт."),e("div",{style:{display:"flex",gap:8}},e("button",{onClick:function(){sL(t.id)},style:{flex:1,padding:"8px 0",border:"1.5px solid "+t.color,background:"transparent",color:t.color,borderRadius:8,cursor:"pointer",fontWeight:600,fontSize:13}},"📖 Учить"),e("button",{onClick:function(){sQ(t.id)},style:{flex:1,padding:"8px 0",border:"none",background:t.color,color:"#fff",borderRadius:8,cursor:"pointer",fontWeight:600,fontSize:13}},"✏️ Квиз")))}))}
   if(md==="menu") return e("div",{style:S.c},e("div",{style:{maxWidth:720,margin:"0 auto"}},
-    e("div",{style:{textAlign:"center",marginBottom:32}},e("div",{style:{fontSize:42,fontWeight:800,letterSpacing:-1,color:"#1a1a1a",marginBottom:4}},"\u{1F1F5}\u{1F1F1} Polski Trener"),e("div",{style:{fontSize:15,color:"#888",letterSpacing:2,textTransform:"uppercase"}},"Грамматика A1–B1 · "+tc+" карточек")),
-    e("button",{onClick:sAQ,style:{width:"100%",padding:"16px 24px",marginBottom:28,background:"linear-gradient(135deg,#2d6a4f,#40916c)",color:"#fff",border:"none",borderRadius:14,cursor:"pointer",fontSize:17,fontWeight:700,boxShadow:"0 4px 20px rgba(45,106,79,0.3)"}},"🎲 Случайный квиз — 25 вопросов"),
-    e("div",{style:{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))",gap:12}},T.map(function(t){var b=ts[t.id];return e("div",{key:t.id,style:{background:"#fff",borderRadius:14,padding:"16px 18px",boxShadow:"0 2px 12px rgba(0,0,0,0.06)",border:"2px solid "+(b>=80?"#c8e6c9":b>=50?"#fff3e0":"transparent")}},e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}},e("div",null,e("span",{style:{fontSize:20,marginRight:8}},t.icon),e("span",{style:{fontWeight:700,fontSize:14,color:t.color}},t.title)),b!==undefined&&e("div",{style:{position:"relative",display:"flex",alignItems:"center",justifyContent:"center"}},e(PR,{pct:b/100,color:b>=80?"#4caf50":b>=50?"#ff9800":"#e53935"}),e("span",{style:{position:"absolute",fontSize:11,fontWeight:700,color:"#555"}},b+"%"))),e("div",{style:{fontSize:12,color:"#999",marginBottom:12}},t.cards.length+" карт."),e("div",{style:{display:"flex",gap:8}},e("button",{onClick:function(){sL(t.id)},style:{flex:1,padding:"8px 0",border:"1.5px solid "+t.color,background:"transparent",color:t.color,borderRadius:8,cursor:"pointer",fontWeight:600,fontSize:13}},"📖 Учить"),e("button",{onClick:function(){sQ(t.id)},style:{flex:1,padding:"8px 0",border:"none",background:t.color,color:"#fff",borderRadius:8,cursor:"pointer",fontWeight:600,fontSize:13}},"✏️ Квиз")))}))));
+    e("div",{style:{textAlign:"center",marginBottom:24}},e("div",{style:{fontSize:42,fontWeight:800,letterSpacing:-1,color:"#1a1a1a",marginBottom:4}},"\u{1F1F5}\u{1F1F1} Polski Trener"),e("div",{style:{fontSize:15,color:"#888",letterSpacing:2,textTransform:"uppercase"}},"Грамматика и лекции · "+(tc+lc)+" карточек")),
+    e("div",{style:{display:"flex",gap:0,marginBottom:20,background:"#e8e8e8",borderRadius:12,padding:3}},
+      e("button",{onClick:function(){sTAB("grammar")},style:{flex:1,padding:"10px 0",borderRadius:10,border:"none",cursor:"pointer",fontWeight:700,fontSize:14,background:tab==="grammar"?"#fff":"transparent",color:tab==="grammar"?"#1a1a1a":"#999",boxShadow:tab==="grammar"?"0 2px 8px rgba(0,0,0,0.08)":"none",transition:"all 0.2s"}},"📚 Грамматика ("+tc+")"),
+      e("button",{onClick:function(){sTAB("lessons")},style:{flex:1,padding:"10px 0",borderRadius:10,border:"none",cursor:"pointer",fontWeight:700,fontSize:14,background:tab==="lessons"?"#fff":"transparent",color:tab==="lessons"?"#1a1a1a":"#999",boxShadow:tab==="lessons"?"0 2px 8px rgba(0,0,0,0.08)":"none",transition:"all 0.2s"}},"📖 Лекции ("+lc+")")),
+    tab==="grammar"?e(React.Fragment,null,
+      e("button",{onClick:sAQ,style:{width:"100%",padding:"16px 24px",marginBottom:28,background:"linear-gradient(135deg,#2d6a4f,#40916c)",color:"#fff",border:"none",borderRadius:14,cursor:"pointer",fontSize:17,fontWeight:700,boxShadow:"0 4px 20px rgba(45,106,79,0.3)"}},"🎲 Случайный квиз — 25 вопросов"),
+      renderTopicGrid(T)):
+    e(React.Fragment,null,
+      (!L||L.length===0)?e("div",{style:{textAlign:"center",padding:40,color:"#999"}},"Лекции ещё не добавлены"):renderTopicGrid(L))
+    ));
 
   if(md==="learn"){var cd=cs[ci],cl=tp.color;return e("div",{style:S.c},e("div",{style:{maxWidth:560,margin:"0 auto"}},
     e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}},e("button",{onClick:function(){sM("menu")},style:{background:"none",border:"none",cursor:"pointer",fontSize:15,color:"#888",fontWeight:600}},"← Назад"),e("span",{style:{fontSize:14,color:"#aaa"}},(ci+1)+" / "+cs.length)),

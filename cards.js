@@ -242,3 +242,72 @@ var T=[
 {q:"Jestem ... (rozczarować) wynikiem",a:"rozczarowany/rozczarowana",hint:"-ować → -owany + Narz.",rule:"Причастие + Narzędnik (чем?):\n\nrozczarowany wynikiem = разочарован результатом\nzadowolony pracą = доволен работой\nzachwycony filmem = восхищён фильмом"}
 ]}
 ];
+
+// Лекции из учебника — отдельная секция
+var L=[
+{id:"lek5",icon:"📖",title:"Lekcja 5 — Co lubisz robić?",color:"#00838f",cards:[
+// --- Словарь: хобби ---
+{q:"Как сказать «бегать» по-польски?",a:"biegać",hint:"спорт",rule:"Хобби — спорт:\n\nbiegać = бегать\npływać = плавать\nuprawiać sport = заниматься спортом\njeździć na rowerze = кататься на велосипеде\njeździć na nartach = кататься на лыжах"},
+{q:"Как сказать «кататься на велосипеде»?",a:"jeździć na rowerze",hint:"jeździć na + Miej.",rule:"jeździć na + Miejscownik:\n\nna rowerze (велосипед)\nna nartach (лыжи)\nna snowboardzie"},
+{q:"Lubię ... po górach (ходить)",a:"chodzić",hint:"chodzić po + Miej.",rule:"chodzić po + Miejscownik = ходить по:\n\nchodzić po górach = ходить по горам\nchodzić po mieście = ходить по городу"},
+{q:"Lubię ... na gitarze (играть)",a:"grać",hint:"grać na + инструмент",rule:"Играть на инструменте: grać na + Miejscownik:\n\ngrać na gitarze, grać na saksofonie, grać na pianinie\n\nИграть в (спорт): grać w + Biernik:\ngrać w tenisa, grać w karty, grać w piłkę nożną"},
+{q:"Lubię ... zdjęcia (делать)",a:"robić",hint:"robić zdjęcia",rule:"robić zdjęcia = делать фотографии\nrobić zakupy = делать покупки\n\nrobić — II спр.: robię, robisz, robi, robimy, robicie, robią"},
+{q:"Lubię ... się z kolegami (встречаться)",a:"spotykać",hint:"spotykać się z + Narz.",rule:"spotykać się z + Narzędnik = встречаться с:\n\nz kolegami, z przyjaciółmi, z rodzicami\n\nspotykam się, spotykasz się, spotyka się..."},
+{q:"Lubię ... telewizję (смотреть)",a:"oglądać",hint:"-ać, I спр.",rule:"oglądać telewizję = смотреть телевизор\n\noglądać — I спр.:\noglądam, oglądasz, ogląda\noglądamy, oglądacie, oglądają"},
+{q:"Lubię ... muzyki (слушать)",a:"słuchać",hint:"słuchać + Dop.!",rule:"słuchać + Dopełniacz = слушать чего:\n\nsłuchać muzyki (не *muzykę!)\nsłuchać radia\nsłuchać wykładu\n\nВнимание: Biernik ожидается, но słuchać требует Dop.!"},
+// --- Структуры: lubić + bezok. / lubić + Biernik / interesować się + Narz. ---
+{q:"Anna lubi czytać książki.\nЧто стоит после lubić?",a:"bezokolicznik",hint:"инфинитив",rule:"Три способа говорить о хобби:\n\n1. lubić + bezokolicznik: Lubię czytać książki.\n2. lubić + Biernik: Lubię literaturę.\n3. interesować się + Narzędnik: Interesuję się literaturą.\n\nВсе три = одно значение, разные конструкции."},
+{q:"Lubię chodzić do kina.\n= Lubię ... (сущ. в Biernik)",a:"kino",hint:"lubić + Biernik",rule:"lubić + Biernik (сущ.):\n\nLubię kino. = Lubię chodzić do kina.\nLubię sport. = Lubię uprawiać sport.\nLubię muzykę. = Lubię słuchać muzyki."},
+{q:"Lubię kino.\n= Interesuję się ... (Narzędnik)",a:"kinem",hint:"kino → kinem",rule:"interesować się + Narzędnik:\n\nkino → kinem\nliteratura → literaturą\nmuzyka → muzyką\nsport → sportem\n\nInteresuję się kinem. = Интересуюсь кино."},
+{q:"Dorota i Renata lubią chodzić do kina.\n= One lubią ... = Interesują się ...",a:"kino / kinem",hint:"Biernik / Narzędnik",rule:"Три формы одной мысли:\n\n1. lubią chodzić do kina (инфинитив)\n2. lubią kino (Biernik)\n3. interesują się kinem (Narzędnik)"},
+{q:"Mój brat lubi czytać książki.\n= On lubi ... = Interesuje się ...",a:"literaturę / literaturą",hint:"Biernik / Narzędnik",rule:"lubić + Biernik: lubi literaturę\ninteresować się + Narz.: interesuje się literaturą\n\nliteratura → literaturę (B.) / literaturą (N.)"},
+{q:"Nasz kuzyn lubi śpiewać i grać na gitarze.\n= On lubi ... = Interesuje się ...",a:"muzykę / muzyką",hint:"Biernik / Narzędnik",rule:"muzyka → muzykę (Biernik) / muzyką (Narzędnik)\n\nLubi muzykę. = Interesuje się muzyką."},
+{q:"Lubimy podróżować po Polsce.\n= Lubimy ... = Interesujemy się ...",a:"geografię / geografią",hint:"Biernik / Narzędnik",rule:"geografia → geografię (B.) / geografią (N.)\n\nLubimy geografię.\nInteresujemy się geografią."},
+// --- Выбор слов ---
+{q:"Bardzo lubię grać w ... – na przykład w brydża.\n(a) karty  (b) sport  (c) piłkę",a:"karty",hint:"grać w karty",rule:"grać w + Biernik (игра):\n\ngrać w karty = играть в карты\ngrać w brydża = играть в бридж\ngrać w tenisa, w piłkę nożną, w szachy"},
+{q:"On nie lubi ... do teatru.\n(a) iść  (b) chodzić  (c) biegać",a:"chodzić",hint:"lubić + chodzić (привычка)",rule:"lubić + инфинитив (привычное действие):\n\nlubić chodzić do teatru (ходить в театр)\nlubić chodzić do kina\nlubić chodzić na koncerty"},
+{q:"Czy ... chodzić do teatru? (ты)\n(a) lubię  (b) lubisz  (c) lubi",a:"lubisz",hint:"ty → lubisz",rule:"lubić — II спр. (-ę, -isz):\n\nja → lubię\nty → lubisz\non → lubi\nmy → lubimy\nwy → lubicie\noni → lubią"},
+{q:"On bardzo lubi ... w Parku Wodnym.\n(a) pływać  (b) biegać  (c) jeździć",a:"pływać",hint:"Park Wodny = бассейн",rule:"pływać = плавать\n\nPark Wodny = аквапарк/бассейн"},
+{q:"Bardzo lubimy ... po Europie.\n(a) jeździć  (b) podróżować  (c) chodzić",a:"podróżować",hint:"путешествовать",rule:"podróżować = путешествовать\n\npodróżować po + Miejscownik:\npo Europie, po Polsce, po świecie"},
+{q:"Moja przyjaciółka lubi ... na dyskotece.\n(a) śpiewać  (b) tańczyć  (c) grać",a:"tańczyć",hint:"на дискотеке танцуют",rule:"tańczyć = танцевать\n\ntańczyć na dyskotece = танцевать на дискотеке\n\ntańczyć — II спр.: tańczę, tańczysz, tańczy..."},
+{q:"One lubią słuchać ... rockowej.\n(a) muzyka  (b) muzykę  (c) muzyki",a:"muzyki",hint:"słuchać + Dop.",rule:"słuchać + Dopełniacz:\n\nmuzyka → muzyki (Dop.)\n\nsłuchać muzyki rockowej\nsłuchać muzyki klasycznej"},
+// --- Jak często? ---
+{q:"Расставь по убыванию частоты:\nrzadko, zawsze, często, nigdy nie, codziennie",a:"zawsze, codziennie, często, rzadko, nigdy nie",hint:"от 100% к 0%",rule:"Наречия частотности (jak często?):\n\nzawsze = всегда (100%)\ncodziennie = каждый день\nzwykle = обычно\nczęsto = часто\nod czasu do czasu = время от времени\nrzadko = редко\nnigdy nie = никогда (0%)"},
+{q:"Pan Kowalski ... wieczorem czyta książki (100%)",a:"zawsze",hint:"= всегда",rule:"zawsze = всегда\n\nZawsze wieczorem czyta książki."},
+{q:"... gra na gitarze klasycznej (каждый день)",a:"Codziennie",hint:"co + dzień",rule:"codziennie = каждый день\n\nCodziennie gra na gitarze."},
+{q:"... chodzi do teatru, bo nie ma czasu (редко)",a:"Rzadko",hint:"мало",rule:"rzadko = редко\n\nRzadko chodzi do teatru.\nbo nie ma czasu = потому что нет времени"},
+{q:"... nie słucha muzyki dyskotekowej (никогда)",a:"Nigdy",hint:"0% + nie",rule:"nigdy nie = никогда не\n\nNigdy nie słucha muzyki dyskotekowej.\n\nДвойное отрицание обязательно!\nnigdy nie = никогда не"},
+{q:"Антоним: Nigdy nie chodzimy do kina. ≠ ...",a:"Zawsze chodzimy do kina.",hint:"никогда ≠ всегда",rule:"Пары антонимов:\n\nnigdy nie ≠ zawsze\nrzadko ≠ często\nczęsto ≠ rzadko"},
+// --- Koniugacje ---
+{q:"mieszkać → (ja) ..., (oni) ...",a:"mieszkam, mieszkają",hint:"-m, -sz",rule:"Koniugacja -m, -sz:\n\nmieszkać:\nmieszkam, mieszkasz, mieszka\nmieszkamy, mieszkacie, mieszkają\n\nТак же: czytać, słuchać, grać, biegać"},
+{q:"jeść → (ja) ..., (oni) ...",a:"jem, jedzą",hint:"неправильный, -m/-sz",rule:"jeść — неправильный (-m, -sz):\n\njem, jesz, je\njemy, jecie, jedzą"},
+{q:"mówić → (ja) ..., (oni) ...",a:"mówię, mówią",hint:"-ę, -isz",rule:"Koniugacja -ę, -isz:\n\nmówić: mówię, mówisz, mówi\nmówimy, mówicie, mówią\n\nТак же: lubić, robić, chodzić"},
+{q:"tańczyć → (ja) ..., (my) ...",a:"tańczę, tańczymy",hint:"-ę, -ysz",rule:"Подтип -ę, -ysz:\n\ntańczyć: tańczę, tańczysz, tańczy\ntańczymy, tańczycie, tańczą"},
+{q:"pisać → (ja) ..., (ty) ...",a:"piszę, piszesz",hint:"-ę, -esz",rule:"Koniugacja -ę, -esz:\n\npisać: piszę, piszesz, pisze\npiszemy, piszecie, piszą\n\nЧередование s → sz"},
+{q:"chcieć → (ja) ..., (on) ..., (oni) ...",a:"chcę, chce, chcą",hint:"-ę, -esz неправ.",rule:"chcieć — неправильный:\n\nchcę, chcesz, chce\nchcemy, chcecie, chcą"},
+{q:"studiować → (ja) ..., (on) ..., (oni) ...",a:"studiuję, studiuje, studiują",hint:"-ować → -uję",rule:"Koniugacja -ować → -uj-:\n\nstudiować: studiuję, studiujesz, studiuje\nstudiujemy, studiujecie, studiują\n\nТак же: pracować, mailować, surfować"},
+{q:"pracować → (my) ..., (wy) ...",a:"pracujemy, pracujecie",hint:"-ować → -ujemy",rule:"pracować:\npracuję, pracujesz, pracuje\npracujemy, pracujecie, pracują"},
+// --- Ćw. 7: спряжение в контексте ---
+{q:"Dwa samoloty ... (lądować, oni)",a:"lądują",hint:"-ować, oni",rule:"lądować → lądują (oni)\n\n-ować → -uj- + окончания"},
+{q:"Marek ... samochód (parkować, on)",a:"parkuje",hint:"-ować, on",rule:"parkować → parkuje (on)"},
+{q:"(ja) ... historią (interesować się)",a:"interesuję się",hint:"-ować, ja",rule:"interesować się → interesuję się\n\ninteresować się + Narzędnik"},
+{q:"One pięknie ... (śpiewać)",a:"śpiewają",hint:"one → -ają",rule:"śpiewać — I спр.:\nśpiewam, śpiewasz, śpiewa\nśpiewamy, śpiewacie, śpiewają"},
+{q:"(ja) ... słabo po polsku (mówić)",a:"mówię",hint:"-ę, -isz, ja",rule:"mówić: mówię, mówisz, mówi\n\nmówić po polsku = говорить по-польски"},
+{q:"Co oni ... codziennie? (robić)",a:"robią",hint:"oni → -ią",rule:"robić: robię, robisz, robi\nrobimy, robicie, robią"},
+{q:"Co (ty) ... robić dzisiaj wieczorem? (chcieć)",a:"chcesz",hint:"-ę, -esz, ty",rule:"chcieć: chcę, chcesz, chce\nchcemy, chcecie, chcą"},
+{q:"Czy (wy) ... powtórzyć numer? (móc)",a:"możecie",hint:"wy → -ecie",rule:"móc: mogę, możesz, może\nmożemy, możecie, mogą"},
+// --- Biernik / Narzędnik ---
+{q:"On interesuje się ... (francuski sport)",a:"francuskim sportem",hint:"interesować się + Narz.",rule:"Narzędnik:\n\nfrancuski → francuskim\nsport → sportem\n\ninteresuje się francuskim sportem"},
+{q:"Bardzo lubię ... (niemiecka kuchnia)",a:"niemiecką kuchnię",hint:"lubić + Biernik",rule:"Biernik жен.:\n\nniemiecka → niemiecką\nkuchnia → kuchnię\n\nlubię niemiecką kuchnię"},
+{q:"Lubisz ... ? (muzyka klasyczna, Biernik)",a:"muzykę klasyczną",hint:"lubić + Biernik жен.",rule:"Biernik жен.:\n\nmuzyka → muzykę\nklasyczna → klasyczną\n\n-a → -ę (сущ.), -a → -ą (прилаг.)"},
+{q:"Interesujesz się ...? (muzyka hiszpańska)",a:"muzyką hiszpańską",hint:"int. się + Narz.",rule:"Narzędnik жен.:\n\nmuzyka → muzyką\nhiszpańska → hiszpańską\n\n-a → -ą (и сущ., и прилаг.)"},
+{q:"Oni interesują się ... (literatura angielska)",a:"literaturą angielską",hint:"int. się + Narz.",rule:"Narzędnik жен.:\n\nliteratura → literaturą\nangielska → angielską"},
+{q:"Interesujesz się ...? (filozofia)",a:"filozofią",hint:"-ia → -ią",rule:"Narzędnik жен. на -ia:\n\nfilozofia → filozofią\nhistoria → historią\ngeografia → geografią"},
+// --- Предлоги ---
+{q:"Lubimy podróżować ... Europie.\n(a) po  (b) w  (c) na",a:"po",hint:"podróżować po + Miej.",rule:"podróżować po + Miejscownik:\n\npo Europie, po Polsce, po świecie"},
+{q:"Grażyna świetnie gra ... saksofonie.\n(a) w  (b) na  (c) do",a:"na",hint:"grać na + инструмент",rule:"grać na + Miejscownik (инструмент):\n\nna saksofonie, na gitarze, na pianinie\n\nНо: grać w + Biernik (игра): w tenisa, w karty"},
+{q:"Czy lubisz chodzić ... dyskotekę?\n(a) do  (b) na  (c) w",a:"na",hint:"на мероприятие = na",rule:"chodzić na + Biernik (мероприятие):\n\nna dyskotekę, na koncert, na basen\n\nНо: chodzić do + Dop. (здание):\ndo teatru, do kina, do restauracji"},
+{q:"Często chodzimy ... restauracji.\n(a) na  (b) do  (c) w",a:"do",hint:"do + Dop. (здание)",rule:"chodzić do + Dopełniacz:\n\ndo restauracji, do kina, do teatru\ndo kawiarni, do muzeum"},
+{q:"Nie umiem grać ... karty.\n(a) na  (b) w  (c) z",a:"w",hint:"grać w + игра",rule:"grać w + Biernik (игра):\n\nw karty, w tenisa, w piłkę nożną, w szachy\n\ngrać na + Miej. (инструмент):\nna gitarze, na pianinie"}
+]}
+];
