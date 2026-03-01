@@ -6,19 +6,19 @@
 <title>Polski Trener — Грамматика A1–B1</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="cards.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI','Helvetica Neue',sans-serif;background:linear-gradient(135deg,#fafaf6 0%,#f0ede4 100%);color:#2d2d2d}
 #root{min-height:100vh}
 input:focus{outline:none}
 button{font-family:inherit}
-.rule-box{margin-top:14px;padding:16px 18px;background:#fff8e1;border:1.5px solid #ffe082;border-radius:12px;font-size:14px;line-height:1.75}
-.rule-box .rule-title{font-weight:700;color:#bf360c;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.rule-box .rule-line{padding:1px 0}
-.rule-box .rule-arrow{font-family:monospace;font-size:13px}
-.rule-box .rule-arrow b{color:#bf360c}
-.rule-box .rule-bullet{padding-left:14px;font-size:13px;color:#555}
-.rule-box .rule-spacer{height:8px}
+.rb{margin-top:14px;padding:16px 18px;background:#fff8e1;border:1.5px solid #ffe082;border-radius:12px;font-size:14px;line-height:1.75}
+.rb .rt{font-weight:700;color:#bf360c;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.rb .ra{font-family:monospace;font-size:13px}
+.rb .ra b{color:#bf360c}
+.rb .rbu{padding-left:14px;font-size:13px;color:#555}
+.rb .rs{height:8px}
 </style>
 </head>
 <body>
@@ -27,353 +27,78 @@ button{font-family:inherit}
 "use strict";
 var e=React.createElement,us=React.useState,ue=React.useEffect,uc=React.useCallback;
 
-var TOPICS=[
-{id:"conjugation",icon:"\u{1F504}",title:"Спряжение глаголов",color:"#2d6a4f",cards:[
-{q:"pracować → Ola i Daniel ... (oni)",a:"pracują",hint:"-ują (I спряжение)",
-rule:"I спряжение (-ę, -esz): глаголы на -ować меняют -owa- на -uj-.\n\nja → pracuję\nty → pracujesz\non/ona → pracuje\nmy → pracujemy\nwy → pracujecie\noni/one → pracują\n\nТак же: kupować → kupuję, budować → buduję, malować → maluję"},
-{q:"chodzić → Często ... po górach (ja)",a:"chodzę",hint:"-ę (II спряжение)",
-rule:"II спряжение (-ę, -isz/-ysz): глаголы на -ić, -eć, -ać (часть).\n\nja → chodzę\nty → chodzisz\non/ona → chodzi\nmy → chodzimy\nwy → chodzicie\noni/one → chodzą\n\nВ 1-м лице ед.ч. и 3-м лице мн.ч. чередование: dz- вместо dzi-."},
-{q:"zamawiać → Oni ... jedzenie (oni)",a:"zamawiają",hint:"-ają",
-rule:"I спряжение: глаголы на -ać сохраняют основу на -aj-.\n\nja → zamawiam\nty → zamawiasz\non/ona → zamawia\nmy → zamawiamy\nwy → zamawiacie\noni/one → zamawiają\n\nТак же: wysyłać → wysyłają, czekać → czekają."},
-{q:"wiedzieć → Oni nie ... jak dojść (oni)",a:"wiedzą",hint:"неправильный глагол",
-rule:"wiedzieć — неправильный глагол (смешанное спряжение):\n\nja → wiem\nty → wiesz\non/ona → wie\nmy → wiemy\nwy → wiecie\noni/one → wiedzą\n\nВнимание: в 3-м лице мн.ч. особая форма wiedzą (nie wiezą!)."},
-{q:"mieć → 80% Polaków ... zwierzę (oni)",a:"ma",hint:"80% + ед.число глагола",
-rule:"Правило процентов: когда подлежащее выражено процентами (более 50%), глагол стоит в 3-м лице ед. числа среднего рода.\n\n80% Polaków ma... (не mają!)\n60% studentów uczy się...\n\nТак же с дробями и словами większość, połowa, część."}
-]},
-{id:"znac_wiedziec",icon:"\u{1F9E0}",title:"znać vs wiedzieć",color:"#7b2cbf",cards:[
-{q:"Julia ... język hiszpański.\n(a) zna  (b) wie",a:"zna",hint:"znać + сущ.",
-rule:"znać = знать кого/что (после него стоит существительное или местоимение):\n• Znam język polski. (знаю язык)\n• Znasz tę osobę? (знаешь этого человека?)\n\nwiedzieć = знать что/как/где (после него идёт придаточное предложение с że, jak, co, gdzie, kiedy):\n• Wiem, że to prawda.\n• Nie wiem, jak to zrobić.\n\nПростой тест: если можно поставить вопрос «кого/что?» → znać. Если «что именно? как? где?» → wiedzieć."},
-{q:"Oni nie ..., jak dojść do parku.\n(a) znają  (b) wiedzą",a:"wiedzą",hint:"wiedzieć + придаточное",
-rule:"wiedzieć используется, когда после глагола идёт придаточное предложение (jak, że, co, gdzie, kiedy, dlaczego).\n\n• Nie wiedzą, jak dojść... (не знают, как...)\n• Wiem, że masz rację. (знаю, что...)\n\nznać — только с прямым дополнением: Znam tę drogę."},
-{q:"... pan tę restaurację?\n(a) Zna  (b) Wie",a:"Zna",hint:"знать кого/что → znać",
-rule:"znać + существительное в Biernik (винительный).\n«Знаете этот ресторан?» = знать что? → znać.\n\nZna pan tę restaurację? Zna pan tego człowieka?"},
-{q:"Nie ..., o której zaczyna się film.\n(a) znam  (b) wiem",a:"wiem",hint:"знать (информацию) → wiedzieć",
-rule:"wiedzieć, когда речь об информации, факте.\n«Не знаю, во сколько начинается...» — это информация, не объект.\n\nNie wiem, o której... / Nie wiem, kiedy... / Nie wiem, dlaczego..."}
-]},
-{id:"narzednik",icon:"\u{1F527}",title:"Творительный (Narzędnik)",color:"#e36414",cards:[
-{q:"Mój brat jest ... ... (początkujący programista)",a:"początkującym programistą",hint:"być + Narzędnik",
-rule:"Narzędnik (творительный) после глагола być (быть, являться).\n\nОкончания прилагательных: -y/-i → -ym/-im\nОкончания существительных: муж. -em/-ą (для муж. на -a)\n\npoczątkujący → początkującym, programista → programistą\nJest dobrym lekarzem. Jest mądrą kobietą."},
-{q:"Do pracy jadę ... (hulajnoga)",a:"hulajnogą",hint:"-a → -ą",
-rule:"Narzędnik для средств транспорта (без предлога):\njechać + Narzędnik\n\nЖенский род на -a: -a → -ą\nhulajnoga → hulajnogą\ntaksówka → taksówką\n\nМужской род: + -em\ntramwaj → tramwajem, pociąg → pociągiem"},
-{q:"Latte z ... ... (mleko roślinne)",a:"mlekiem roślinnym",hint:"z + Narzędnik",
-rule:"z + Narzędnik = с чем-либо\n\nСредний род: -o → -em (mleko → mlekiem)\nПрилагательное ср.р.: -e → -ym (roślinne → roślinnym)\n\nЕщё примеры: z cukrem (с сахаром), z miodem (с мёдом), z gorącą czekoladą (с горячим шоколадом)"},
-{q:"Jeździlibyście ... (tramwaj)",a:"tramwajem",hint:"средство транспорта = Narzędnik",
-rule:"Средство транспорта в Narzędnik (без предлога):\n\ntramwaj → tramwajem\nautobus → autobusem\nsamochód → samochodem\nrower → rowerem\n\nМужской род: + -em (после мягких согласных тоже -em: pociąg → pociągiem)"}
-]},
-{id:"dopelniacz",icon:"\u{1F4C9}",title:"Родительный (Dopełniacz)",color:"#d62828",cards:[
-{q:"Nie lubię ... ... (mocna kawa)",a:"mocnej kawy",hint:"nie + lubić + Dopełniacz",
-rule:"Dopełniacz (родительный) после отрицания: nie + lubić/mieć/chcieć + Dopełniacz\n\nЖен. прилаг.: -a → -ej (mocna → mocnej)\nЖен. сущ. на -a: -a → -y/-i (kawa → kawy)\n\nNie lubię mocnej kawy. Nie mam czasu. Nie chcę zimnej wody."},
-{q:"brakiem ... na bilety (pieniądze)",a:"pieniędzy",hint:"Мн.ч. Dopełniacz",
-rule:"Dopełniacz множественного числа — нерегулярные формы:\n\npieniądze → pieniędzy (деньги)\ndzieci → dzieci (дети)\nludzie → ludzi (люди)\n\nПосле brak / brakiem всегда Dopełniacz: brakiem pieniędzy, brakiem czasu."},
-{q:"Od ... pożyczyłeś? (kto)",a:"kogo",hint:"od + Dopełniacz",
-rule:"Предлог od требует Dopełniacz.\n\nkto по падежам:\nMianownik: kto\nDopełniacz: kogo\nCelownik: komu\nBiernik: kogo\nNarzędnik: kim\nMiejscownik: kim\n\nOd kogo? = от кого?"},
-{q:"Z powodu ... (choroba)",a:"choroby",hint:"z powodu + Dopełniacz",
-rule:"z powodu + Dopełniacz = из-за (формально)\n\nЖенский род на -a: -a → -y (choroba → choroby)\n\nz powodu choroby (из-за болезни)\nz powodu deszczu (из-за дождя)\nz powodu opóźnienia (из-за опоздания)\n\nСравни: przez + Biernik (разговорное, часто о виновнике): przez niego, przez deszcz"},
-{q:"Dzisiaj nie ma ... ... (troje studentów)",a:"trojga studentów",hint:"troje → trojga в Dopełniacz",
-rule:"Собирательные числительные в Dopełniacz:\n\ndwoje → dwojga\ntroje → trojga\nczworo → czworga\npięcioro → pięciorga\n\nnie ma + Dopełniacz: nie ma trojga studentów\n\nСобирательные используются для смешанных групп (М+Ж), детей, и сущ. pluralia tantum."}
-]},
-{id:"miejscownik",icon:"\u{1F4CD}",title:"Местный (Miejscownik)",color:"#0077b6",cards:[
-{q:"Mieszkamy w ... (Szwecja)",a:"Szwecji",hint:"-ja → -ji",
-rule:"Miejscownik (местный падеж) после w, na, o, po, przy.\n\nЖен. на -ja: -ja → -ji\nSzwecja → Szwecji\nFrancja → Francji\nAnglia → Anglii\n\nЖен. на -ka: -ka → -ce\nPolska → Polsce"},
-{q:"Byłam w ... ... (nowa kawiarnia)",a:"nowej kawiarni",hint:"-a → -ej, -ia → -i",
-rule:"Miejscownik женского рода:\n\nПрилагательное: -a → -ej (nowa → nowej)\nСущ. на -nia: -nia → -ni (kawiarnia → kawiarni)\nСущ. на -ka: -ka → -ce (apteka → aptece)\nСущ. на -a: -a → -e (szkoła → szkole)\n\nw nowej kawiarni, w starej aptece, w dużej szkole"},
-{q:"Parki w moim ... (miasto)",a:"mieście",hint:"-o → -ście (чередование)",
-rule:"Miejscownik среднего рода — чередования согласных:\n\nmiasto → mieście (st → ści)\nmięso → mięsie (s → si)\nmorze → morzu\npiwo → piwie (w → wi)\n\nОбщее правило: -o → -e (с чередованием) или -o → -u"},
-{q:"Spotkaniu o ... ... (08:30)",a:"ósmej trzydzieści",hint:"o + порядковое числит. в Miejscownik",
-rule:"Время: o + порядковое числительное в Miejscownik (жен. род, т.к. godzina — женский).\n\no ósmej = в 8:00 (ósma → ósmej)\no ósmej trzydzieści = в 8:30\no wpół do dziewiątej = в пол-девятого\n\no pierwszej (1:00), o drugiej (2:00), o trzeciej (3:00)..."}
-]},
-{id:"celownik",icon:"\u{1F3AF}",title:"Дательный (Celownik)",color:"#4361ee",cards:[
-{q:"Sara napisała ... (ja) co się wydarzyło",a:"mi",hint:"написала кому? → mi",
-rule:"Celownik (дательный) отвечает на вопрос кому?\n\nМестоимения в Celownik:\nja → mi/mnie\nty → ci/tobie\non → mu/jemu\nona → jej\nmy → nam\nwy → wam\noni/one → im\n\nmi — короткая форма (в середине предложения)\nmnie — полная (под ударением, в начале)"},
-{q:"Ufam moim ... (przyjaciel, мн.ч.)",a:"przyjaciołom",hint:"Celownik мн.ч. -om",
-rule:"Celownik множественного числа: -om для всех родов.\n\nprzyjaciel → przyjaciołom\nstudent → studentom\nkobieta → kobietom\ndziecko → dzieciom\n\nufać + Celownik = доверять кому\n\nТакже Celownik требуют: podobać się, dziękować, pomóc, dać, powiedzieć."},
-{q:"Świat był przeciwko ... (ty)",a:"tobie",hint:"przeciwko + Celownik",
-rule:"Предлог przeciwko (против) требует Celownik.\n\nprzeciwko mnie (против меня)\nprzeciwko tobie (против тебя)\nprzeciwko niemu (против него)\nprzeciwko nam (против нас)\n\nВнимание: после предлогов используются полные формы (tobie, не ci)."}
-]},
-{id:"past_tense",icon:"⏪",title:"Прошедшее время",color:"#6a040f",cards:[
-{q:"Wczoraj dzieci ... bajki (oglądać)",a:"oglądały",hint:"dzieci = niemęskoosobowe → -ły",
-rule:"Прошедшее время — окончание зависит от рода:\n\nМуж. ед.: -ł (oglądał)\nЖен. ед.: -ła (oglądała)\nСр. ед.: -ło (oglądało)\nМн. лично-муж.: -li (oglądali)\nМн. остальные: -ły (oglądały)\n\ndzieci = неличномужская форма → -ły"},
-{q:"Moi dziadkowie ... się w 1965\n(a) pobrali  (b) ożenili  (c) wyszli za mąż",a:"pobrali",hint:"пара → pobrać się",
-rule:"Глаголы бракосочетания:\n\npobrać się = пожениться (о паре, оба вместе)\nożenić się = жениться (только о мужчине)\nwyjść za mąż = выйти замуж (только о женщине)\n\nMoi dziadkowie (бабушка и дедушка = пара) → pobrali się"},
-{q:"Na czele urzędu ... Julia Nowak (stanąć)",a:"stanęła",hint:"она → -ęła",
-rule:"Совершенный вид в прошедшем времени:\n\nstanąć (встать, стать):\non → stanął\nona → stanęła\noni → stanęli\none → stanęły\n\nJulia = женский род → stanęła\nГлаголы на -ąć: -ął/-ęła/-ęli/-ęły"},
-{q:"Od kiedy ... nowy most (zbudować)",a:"zbudowano",hint:"безличная форма → -no/-to",
-rule:"Безличная форма прошедшего времени (-no/-to):\nИспользуется, когда действующее лицо неизвестно или неважно.\n\n-ać → -ano: zbudować → zbudowano\n-ić/-yć → -ono: zrobić → zrobiono\n-ąć → -ęto: wziąć → wzięto\n\nZbudowano nowy most. = Построили новый мост."}
-]},
-{id:"conditional",icon:"\u{1F4AD}",title:"Условное + żeby",color:"#457b9d",cards:[
-{q:"Gdybyście mieli kartę, ... tramwajem (jeździć, wy)",a:"jeździlibyście",hint:"прош.вр. + byście",
-rule:"Условное наклонение = прошедшее время + by + окончание лица:\n\nja → -łbym / -łabym\nty → -łbyś / -łabyś\non/ona → -łby / -łaby\nmy → -libyśmy / -łybyśmy\nwy → -libyście / -łybyście\noni/one → -liby / -łyby\n\ngdyby + прош.вр., ... бы-форма\nGdybyście mieli... jeździlibyście..."},
-{q:"Proszę, żebyś ... ze mną (pójść, ty)",a:"poszedł/poszła",hint:"żebyś + прош.вр.",
-rule:"żeby + личное окончание + прошедшее время:\n\nżebym + прош.вр. (ja)\nżebyś + прош.вр. (ty)\nżeby + прош.вр. (on/ona)\nżebyśmy + прош.вр. (my)\nżebyście + прош.вр. (wy)\n\nProszę, żebyś poszedł (если ты = м.) / poszła (если ты = ж.)"},
-{q:"Chciałby, ... (my) częściej spotykali się (żeby)",a:"żebyśmy",hint:"żeby + śmy → żebyśmy",
-rule:"Личные окончания присоединяются к żeby:\n\nżeby + m = żebym (ja)\nżeby + ś = żebyś (ty)\nżeby (on/ona)\nżeby + śmy = żebyśmy (my)\nżeby + ście = żebyście (wy)\nżeby (oni/one)\n\nChciałby, żebyśmy częściej spotykali się = хотел бы, чтобы мы чаще встречались"}
-]},
-{id:"ktory",icon:"\u{1F517}",title:"Который (który)",color:"#52796f",cards:[
-{q:"Ludzie, ... jedzą zdrowo (który, лич.-муж. мн.)",a:"którzy",hint:"лично-мужская мн.ч.",
-rule:"który согласуется в роде и числе с существительным:\n\nМуж. ед.: który\nЖен. ед.: która\nСр. ед.: które\nМн. лично-муж.: którzy\nМн. остальные: które\n\nludzie = лично-мужская форма → którzy\nosoby = неличномужская → które"},
-{q:"Osoby, ... tego nie robią (który, жен. мн.)",a:"które",hint:"немужская мн.ч.",
-rule:"osoby (люди/лица) — женский род, мн.ч. → które\n\nВажно: даже если речь о мужчинах, слово osoby грамматически женского рода.\n\nСравни: ludzie → którzy (лич.-муж.)\nosoby → które (нелич.-муж.)"},
-{q:"Mężczyzna, ... tu mieszka (który)",a:"który",hint:"муж. ед.ч. именительный",
-rule:"który в именительном падеже (подлежащее придаточного):\n\nmężczyzna = муж. род ед.ч. → który\nkobieta = жен. → która\ndziecko = ср. → które\n\nПадеж który определяется его ролью в придаточном предложении, не в главном."}
-]},
-{id:"comparison",icon:"⚖️",title:"Степени сравнения",color:"#bc6c25",cards:[
-{q:"Amazonka jest ... rzeką niż Wisła (długi, сравнит.)",a:"dłuższą",hint:"długi → dłuższy",
-rule:"Сравнительная степень прилагательных:\n\ndługi → dłuższy / dłuższa / dłuższe\nkrótki → krótszy\ndobry → lepszy\nzły → gorszy\n\nЗдесь rzeką (жен. Narzędnik) → dłuższą\njest + Narzędnik: Amazonka jest dłuższą rzeką niż Wisła.\n\nniż = чем (после niż — Mianownik)"},
-{q:"Piotr gra ... z całej grupy (dobrze, превосх.)",a:"najlepiej",hint:"dobrze → lepiej → najlepiej",
-rule:"Степени сравнения наречий:\n\ndobrze → lepiej → najlepiej\nźle → gorzej → najgorzej\ndużo → więcej → najwięcej\nmało → mniej → najmniej\n\nПревосходная = naj- + сравнительная\nz całej grupy = из всей группы (после превосходной — z + Dopełniacz)"},
-{q:"Jej koledzy są bardzo ... (miły, мн. лич.-муж.)",a:"mili",hint:"miły → mili",
-rule:"Прилагательные во мн.ч. лично-мужской формы:\n\nЧередования согласных:\nmiły → mili (ł → l)\ndobry → dobrzy (r → rz)\nwysoki → wysocy (k → c)\nmłody → młodzi (d → dz)\nstary → starzy (r → rz)\n\nkoledzy (мужчины) = лично-мужская форма"}
-]},
-{id:"numbers",icon:"\u{1F522}",title:"Числительные",color:"#6d6875",cards:[
-{q:"74 − 23 = ? (словами)",a:"pięćdziesiąt jeden",hint:"50 + 1",
-rule:"Десятки:\n20 dwadzieścia, 30 trzydzieści, 40 czterdzieści,\n50 pięćdziesiąt, 60 sześćdziesiąt,\n70 siedemdziesiąt, 80 osiemdziesiąt, 90 dziewięćdziesiąt\n\nЕдиницы просто добавляются: pięćdziesiąt jeden (51)\n\nВычитание: minus. 74 − 23 = 51"},
-{q:"1956 год (w ... roku)",a:"tysiąc dziewięćset pięćdziesiątym szóstym",hint:"Miejscownik порядкового",
-rule:"Годы: w + Miejscownik порядкового числительного (rok = муж. род).\n\nТолько последняя часть склоняется:\n1956 = tysiąc dziewięćset pięćdziesiątym szóstym\n2024 = dwa tysiące dwudziestym czwartym\n\nw ... roku — всегда Miejscownik."},
-{q:"Mają ... dzieci (3, собират.)",a:"troje",hint:"дети → собирательное числит.",
-rule:"Собирательные числительные используются с:\n• детьми (dzieci)\n• смешанными группами (М+Ж)\n• pluralia tantum (drzwi, okulary)\n\n2 = dwoje, 3 = troje, 4 = czworo, 5 = pięcioro\n\ntroje dzieci = трое детей\nНельзя: *trzy dzieci — только troje!"},
-{q:"Film dozwolony od ... (12 lat)",a:"dwunastu lat",hint:"od + Dopełniacz",
-rule:"od + числительное в Dopełniacz:\n\n12 = dwanaście → Dopełniacz: dwunastu\nlata → Dopełniacz: lat\n\nod dwunastu lat = от 12 лет\n\nЧислительные 11–19 в Dopełniacz:\n11 = jedenastu, 12 = dwunastu, 13 = trzynastu,\n14 = czternastu, 15 = piętnastu..."}
-]},
-{id:"idioms",icon:"\u{1F4AC}",title:"Идиомы и лексика",color:"#5a189a",cards:[
-{q:"Kasia ma świetne pomysły — ma ...\n(a) głowę na karku  (b) pstro w głowie",a:"głowę na karku",hint:"смекалистая",
-rule:"mieć głowę na karku = быть смекалистым, сообразительным, с головой на плечах.\n\nmieć pstro w głowie = быть легкомысленным, ветреным.\n\nmieć twardą rękę = быть строгим, твёрдой рукой управлять.\n\nЗдесь: светлые помыслы = głowa na karku"},
-{q:"Zarabia mało. Pracuje ...\n(a) za pół darmo  (b) na czarno  (c) jak szalony",a:"za pół darmo",hint:"почти бесплатно",
-rule:"pracować za pół darmo = работать почти бесплатно, за копейки.\n\npracować na czarno = работать нелегально, без оформления.\n\npracować jak szalony = работать как сумасшедший (очень много).\n\nКлюч: «zarabia mało» = мало зарабатывает → za pół darmo"},
-{q:"Ma 15 kg ...\n(a) nadwagi  (b) wagi  (c) przewagi",a:"nadwagi",hint:"лишний вес = nadwaga",
-rule:"nadwaga = лишний вес (nad- = сверх- + waga = вес)\nmieć nadwagę / mieć X kg nadwagi\n\nwaga = вес (нейтрально, не «лишний»)\nprzewaga = преимущество, перевес\n\nMa 15 kg nadwagi = имеет 15 кг лишнего веса"},
-{q:"Wysyłam serdeczne ... z wakacji\n(a) witania  (b) pozdrowienia  (c) życzenia",a:"pozdrowienia",hint:"приветы с отдыха",
-rule:"pozdrowienia = приветы (wysyłać pozdrowienia z wakacji = передавать приветы с отдыха)\n\nżyczenia = пожелания (на день рождения, Новый год)\n\nwitania — такое слово не используется в этом контексте.\n\nУстойчивое: serdeczne pozdrowienia"},
-{q:"Niczego się nie ...\n(a) przerobił  (b) dorobił  (c) zrobił",a:"dorobił",hint:"dorobić się = нажить",
-rule:"dorobić się = нажить, заработать, добиться (материально)\nniczego się nie dorobił = ничего не нажил\n\nprzerobić = переделать, переработать\nzrobić = сделать (общее)\n\nПриставка do- часто = достижение, дополнение."},
-{q:"Lena ma ... zdać egzamin (nadzieja)",a:"nadzieję",hint:"mieć nadzieję = надеяться",
-rule:"mieć nadzieję = надеяться (have hope)\n\nnadzieja = надежда (Mianownik)\nnadzieję = Biernik (после mieć)\n\nmieć + Biernik: nadzieja → nadzieję (-a → -ę)\n\nТакже: mieć ochotę (хотеть), mieć rację (быть правым), mieć czas (иметь время)"}
-]},
-{id:"po_zdaniu",icon:"⏭️",title:"po + отглаг. сущ.",color:"#3a5a40",cards:[
-{q:"Zaczniemy wakacje po ... egzaminów (zdać)",a:"zdaniu",hint:"po + Miejscownik",
-rule:"po + отглагольное существительное в Miejscownik = после того как...\n\nzdać → zdanie → po zdaniu\nspożyć → spożycie → po spożyciu\nskończyć → skończenie → po skończeniu\nwrócić → wrócenie → po wróceniu\n\npo zdaniu egzaminów = после сдачи экзаменов"},
-{q:"Przyszedł spóźniony, ale ... (uczesać się)",a:"uczesany",hint:"причастие = состояние",
-rule:"Причастие прошедшего времени описывает состояние:\n\nuczesać się → uczesany/uczesana (причёсанный)\nspóźnić się → spóźniony/spóźniona (опоздавший)\nzmęczyć się → zmęczony/zmęczona (уставший)\n\nОбразование: основа + -ny/-na или -ty/-ta\nСогласуется в роде с подлежащим."},
-{q:"Ona mówi, że to przez ... (on)",a:"niego",hint:"przez + Biernik",
-rule:"przez + Biernik = из-за (виновник)\n\nМестоимения в Biernik после предлогов получают n-:\non → niego (go только без предлога)\nona → nią (ją только без предлога)\noni → nich\n\nprzez niego = из-за него\ndla niego = для него\n\nСравни: z powodu + Dopełniacz (формально)"}
-]}
-];
-
 function shuffle(a){a=[].concat(a);for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
-
-function ProgressRing(p){
-  var s=p.size||44,k=p.stroke||4,r=(s-k)/2,c=2*Math.PI*r;
-  return e("svg",{width:s,height:s,style:{transform:"rotate(-90deg)"}},
-    e("circle",{cx:s/2,cy:s/2,r:r,fill:"none",stroke:"rgba(0,0,0,0.08)",strokeWidth:k}),
-    e("circle",{cx:s/2,cy:s/2,r:r,fill:"none",stroke:p.color,strokeWidth:k,strokeDasharray:c,strokeDashoffset:c*(1-p.pct),strokeLinecap:"round",style:{transition:"stroke-dashoffset 0.5s ease"}})
-  );
-}
-
-function RuleBox(p){
-  var lines=p.text.split("\n");
-  return e("div",{className:"rule-box"},
-    e("div",{className:"rule-title"},"\u{1F4D6} ","Правило"),
-    lines.map(function(line,i){
-      if(!line.trim())return e("div",{key:i,className:"rule-spacer"});
-      if(line.match(/^[•]/))return e("div",{key:i,className:"rule-bullet"},line);
-      if(line.indexOf("→")!==-1){
-        var parts=line.split("→");
-        return e("div",{key:i,className:"rule-arrow"},
-          e("span",null,parts[0]),
-          "→ ",
-          e("b",null,parts.slice(1).join("→"))
-        );
-      }
-      return e("div",{key:i,className:"rule-line"},line);
-    })
-  );
-}
+function PR(p){var s=p.size||44,k=p.stroke||4,r=(s-k)/2,c=2*Math.PI*r;return e("svg",{width:s,height:s,style:{transform:"rotate(-90deg)"}},e("circle",{cx:s/2,cy:s/2,r:r,fill:"none",stroke:"rgba(0,0,0,0.08)",strokeWidth:k}),e("circle",{cx:s/2,cy:s/2,r:r,fill:"none",stroke:p.color,strokeWidth:k,strokeDasharray:c,strokeDashoffset:c*(1-p.pct),strokeLinecap:"round",style:{transition:"stroke-dashoffset 0.5s ease"}}))}
+function RB(p){var lines=p.text.split("\n");return e("div",{className:"rb"},e("div",{className:"rt"},"\u{1F4D6} Правило"),lines.map(function(l,i){if(!l.trim())return e("div",{key:i,className:"rs"});if(l.match(/^[•]/))return e("div",{key:i,className:"rbu"},l);if(l.indexOf("→")!==-1){var p=l.split("→");return e("div",{key:i,className:"ra"},e("span",null,p[0]),"→ ",e("b",null,p.slice(1).join("→")))}return e("div",{key:i},l)}))}
 
 function App(){
-  var _m=us("menu"),mode=_m[0],setMode=_m[1];
-  var _t=us(null),topicId=_t[0],setTopicId=_t[1];
-  var _ci=us(0),cardIdx=_ci[0],setCardIdx=_ci[1];
-  var _fl=us(false),flipped=_fl[0],setFlipped=_fl[1];
-  var _sh=us(false),showHint=_sh[0],setShowHint=_sh[1];
-  var _qc=us([]),quizCards=_qc[0],setQuizCards=_qc[1];
-  var _ua=us(""),userAnswer=_ua[0],setUserAnswer=_ua[1];
-  var _qr=us(null),quizResult=_qr[0],setQuizResult=_qr[1];
-  var _sc=us({correct:0,wrong:0,answers:[]}),score=_sc[0],setScore=_sc[1];
-  var _ts=us(function(){try{return JSON.parse(localStorage.getItem("polskiScores")||"{}")}catch(x){return{}}}),topicScores=_ts[0],setTopicScores=_ts[1];
-  var _at=us(false),allTopicsMode=_at[0],setAllTopicsMode=_at[1];
+  var _m=us("menu"),md=_m[0],sM=_m[1];
+  var _t=us(null),tId=_t[0],sT=_t[1];
+  var _ci=us(0),ci=_ci[0],sCI=_ci[1];
+  var _fl=us(false),fl=_fl[0],sFL=_fl[1];
+  var _sh=us(false),sh=_sh[0],sSH=_sh[1];
+  var _qc=us([]),qc=_qc[0],sQC=_qc[1];
+  var _ua=us(""),ua=_ua[0],sUA=_ua[1];
+  var _qr=us(null),qr=_qr[0],sQR=_qr[1];
+  var _sc=us({c:0,w:0,a:[]}),sc=_sc[0],sSC=_sc[1];
+  var _ts=us(function(){try{return JSON.parse(localStorage.getItem("pt3")||"{}")}catch(x){return{}}}),ts=_ts[0],sTS=_ts[1];
+  var _at=us(false),at=_at[0],sAT=_at[1];
+  ue(function(){try{localStorage.setItem("pt3",JSON.stringify(ts))}catch(x){}},[ts]);
+  var tp=T.find(function(t){return t.id===tId});var cs=tp?tp.cards:[];
+  var tc=T.reduce(function(s,t){return s+t.cards.length},0);
+  function sL(id){sT(id);sCI(0);sFL(false);sSH(false);sM("learn");sAT(false)}
+  function sQ(id){var t=T.find(function(x){return x.id===id});sT(id);sQC(shuffle(t.cards));sCI(0);sUA("");sQR(null);sSC({c:0,w:0,a:[]});sM("quiz");sAT(false)}
+  function sAQ(){var all=T.flatMap(function(t){return t.cards.map(function(c){return Object.assign({},c,{tId:t.id,tT:t.title})})});sQC(shuffle(all).slice(0,25));sT(null);sCI(0);sUA("");sQR(null);sSC({c:0,w:0,a:[]});sM("quiz");sAT(true)}
+  function chk(){var cd=qc[ci];var ok=ua.trim().toLowerCase()===cd.a.toLowerCase()||cd.a.toLowerCase().split("/").some(function(v){return ua.trim().toLowerCase()===v.trim()});sQR(ok?"c":"w");sSC(function(s){return{c:s.c+(ok?1:0),w:s.w+(ok?0:1),a:s.a.concat([{cd:cd,ua:ua.trim(),ok:ok}])}})}
+  function nxt(){if(ci+1>=qc.length){var p=Math.round((sc.c/qc.length)*100);if(tId)sTS(function(s){var n={};for(var k in s)n[k]=s[k];n[tId]=Math.max(s[tId]||0,p);return n});sM("res")}else{sCI(function(i){return i+1});sUA("");sQR(null);sSH(false)}}
+  var hk=uc(function(ev){if(md==="quiz"&&ev.key==="Enter"){if(qr)nxt();else if(ua.trim())chk()}if(md==="learn"){if(ev.key===" "||ev.key==="Enter"){ev.preventDefault();sFL(function(f){return!f})}if(ev.key==="ArrowRight"&&ci<cs.length-1){sCI(function(i){return i+1});sFL(false);sSH(false)}if(ev.key==="ArrowLeft"&&ci>0){sCI(function(i){return i-1});sFL(false);sSH(false)}}},[md,qr,ua,ci,cs.length]);
+  ue(function(){window.addEventListener("keydown",hk);return function(){window.removeEventListener("keydown",hk)}},[hk]);
+  var S={c:{minHeight:"100vh",padding:20}};
 
-  ue(function(){try{localStorage.setItem("polskiScores",JSON.stringify(topicScores))}catch(x){}},[topicScores]);
+  if(md==="menu") return e("div",{style:S.c},e("div",{style:{maxWidth:720,margin:"0 auto"}},
+    e("div",{style:{textAlign:"center",marginBottom:32}},e("div",{style:{fontSize:42,fontWeight:800,letterSpacing:-1,color:"#1a1a1a",marginBottom:4}},"\u{1F1F5}\u{1F1F1} Polski Trener"),e("div",{style:{fontSize:15,color:"#888",letterSpacing:2,textTransform:"uppercase"}},"Грамматика A1–B1 · "+tc+" карточек")),
+    e("button",{onClick:sAQ,style:{width:"100%",padding:"16px 24px",marginBottom:28,background:"linear-gradient(135deg,#2d6a4f,#40916c)",color:"#fff",border:"none",borderRadius:14,cursor:"pointer",fontSize:17,fontWeight:700,boxShadow:"0 4px 20px rgba(45,106,79,0.3)"}},"🎲 Случайный квиз — 25 вопросов"),
+    e("div",{style:{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))",gap:12}},T.map(function(t){var b=ts[t.id];return e("div",{key:t.id,style:{background:"#fff",borderRadius:14,padding:"16px 18px",boxShadow:"0 2px 12px rgba(0,0,0,0.06)",border:"2px solid "+(b>=80?"#c8e6c9":b>=50?"#fff3e0":"transparent")}},e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}},e("div",null,e("span",{style:{fontSize:20,marginRight:8}},t.icon),e("span",{style:{fontWeight:700,fontSize:14,color:t.color}},t.title)),b!==undefined&&e("div",{style:{position:"relative",display:"flex",alignItems:"center",justifyContent:"center"}},e(PR,{pct:b/100,color:b>=80?"#4caf50":b>=50?"#ff9800":"#e53935"}),e("span",{style:{position:"absolute",fontSize:11,fontWeight:700,color:"#555"}},b+"%"))),e("div",{style:{fontSize:12,color:"#999",marginBottom:12}},t.cards.length+" карт."),e("div",{style:{display:"flex",gap:8}},e("button",{onClick:function(){sL(t.id)},style:{flex:1,padding:"8px 0",border:"1.5px solid "+t.color,background:"transparent",color:t.color,borderRadius:8,cursor:"pointer",fontWeight:600,fontSize:13}},"📖 Учить"),e("button",{onClick:function(){sQ(t.id)},style:{flex:1,padding:"8px 0",border:"none",background:t.color,color:"#fff",borderRadius:8,cursor:"pointer",fontWeight:600,fontSize:13}},"✏️ Квиз")))}))));
 
-  var topic=TOPICS.find(function(t){return t.id===topicId});
-  var cards=topic?topic.cards:[];
+  if(md==="learn"){var cd=cs[ci],cl=tp.color;return e("div",{style:S.c},e("div",{style:{maxWidth:560,margin:"0 auto"}},
+    e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}},e("button",{onClick:function(){sM("menu")},style:{background:"none",border:"none",cursor:"pointer",fontSize:15,color:"#888",fontWeight:600}},"← Назад"),e("span",{style:{fontSize:14,color:"#aaa"}},(ci+1)+" / "+cs.length)),
+    e("div",{style:{textAlign:"center",marginBottom:8}},e("span",{style:{fontSize:28}},tp.icon),e("span",{style:{fontSize:18,fontWeight:700,color:cl,marginLeft:10}},tp.title)),
+    e("div",{style:{height:4,background:"#e0e0e0",borderRadius:2,marginBottom:28}},e("div",{style:{height:4,background:cl,borderRadius:2,width:((ci+1)/cs.length*100)+"%",transition:"width 0.3s"}})),
+    e("div",{onClick:function(){sFL(function(f){return!f})},style:{background:fl?cl:"#fff",color:fl?"#fff":"#2d2d2d",borderRadius:20,padding:"48px 36px",minHeight:220,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",cursor:"pointer",boxShadow:"0 8px 40px rgba(0,0,0,0.1)",transition:"all 0.35s ease"}},!fl?e(React.Fragment,null,e("div",{style:{fontSize:20,fontWeight:600,lineHeight:1.6,textAlign:"center",whiteSpace:"pre-line"}},cd.q),e("div",{style:{marginTop:20,fontSize:13,color:"#bbb"}},"Нажми для ответа")):e(React.Fragment,null,e("div",{style:{fontSize:13,opacity:0.7,marginBottom:10,textTransform:"uppercase",letterSpacing:1}},"Ответ"),e("div",{style:{fontSize:28,fontWeight:800,textAlign:"center"}},cd.a),e("div",{style:{fontSize:14,opacity:0.8,marginTop:16,textAlign:"center",fontStyle:"italic"}},cd.hint))),
+    !fl&&e("div",{style:{textAlign:"center",marginTop:16}},e("button",{onClick:function(ev){ev.stopPropagation();sSH(function(h){return!h})},style:{background:"none",border:"none",cursor:"pointer",fontSize:13,color:"#aaa"}},sh?"💡 "+cd.hint:"💡 Подсказка")),
+    fl&&cd.rule&&e(RB,{text:cd.rule}),
+    e("div",{style:{display:"flex",justifyContent:"center",gap:16,marginTop:28}},e("button",{disabled:ci===0,onClick:function(){sCI(function(i){return i-1});sFL(false);sSH(false)},style:{padding:"12px 28px",borderRadius:10,border:"1.5px solid #ddd",background:"#fff",cursor:ci===0?"default":"pointer",opacity:ci===0?0.4:1,fontWeight:600,fontSize:15}},"◀"),e("button",{disabled:ci===cs.length-1,onClick:function(){sCI(function(i){return i+1});sFL(false);sSH(false)},style:{padding:"12px 28px",borderRadius:10,border:"none",background:cl,color:"#fff",cursor:ci===cs.length-1?"default":"pointer",opacity:ci===cs.length-1?0.4:1,fontWeight:600,fontSize:15}},"▶")),
+    e("div",{style:{textAlign:"center",marginTop:20,fontSize:12,color:"#bbb"}},"Пробел — перевернуть · ← → навигация")))}
 
-  function startLearn(id){setTopicId(id);setCardIdx(0);setFlipped(false);setShowHint(false);setMode("learn");setAllTopicsMode(false)}
-  function startQuiz(id){var t=TOPICS.find(function(x){return x.id===id});setTopicId(id);setQuizCards(shuffle(t.cards));setCardIdx(0);setUserAnswer("");setQuizResult(null);setScore({correct:0,wrong:0,answers:[]});setMode("quiz");setAllTopicsMode(false)}
-  function startAllQuiz(){var all=TOPICS.flatMap(function(t){return t.cards.map(function(c){return Object.assign({},c,{topicId:t.id,topicTitle:t.title})})});setQuizCards(shuffle(all).slice(0,20));setTopicId(null);setCardIdx(0);setUserAnswer("");setQuizResult(null);setScore({correct:0,wrong:0,answers:[]});setMode("quiz");setAllTopicsMode(true)}
+  if(md==="quiz"){var cd=qc[ci],cl=at?"#2d6a4f":tp.color;
+    var mc=cd.q.includes("(a)")||cd.q.includes("(b)");var opts=[];
+    if(mc){var m=cd.q.split("\n").slice(1).join(" ").match(/\(([a-c])\)\s*([^(]+)/g);if(m)opts=m.map(function(x){var r=x.match(/\(([a-c])\)\s*(.+)/);return r?{l:r[1],t:r[2].trim()}:null}).filter(Boolean)}
+    return e("div",{style:S.c},e("div",{style:{maxWidth:560,margin:"0 auto"}},
+      e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}},e("button",{onClick:function(){sM("menu")},style:{background:"none",border:"none",cursor:"pointer",fontSize:15,color:"#888",fontWeight:600}},"← Выйти"),e("div",{style:{display:"flex",alignItems:"center",gap:12}},e("span",{style:{fontSize:14,color:"#4caf50",fontWeight:700}},"✓"+sc.c),e("span",{style:{fontSize:14,color:"#e53935",fontWeight:700}},"✗"+sc.w),e("span",{style:{fontSize:14,color:"#aaa"}},(ci+1)+"/"+qc.length))),
+      e("div",{style:{height:4,background:"#e0e0e0",borderRadius:2,marginBottom:28}},e("div",{style:{height:4,background:cl,borderRadius:2,width:((ci+1)/qc.length*100)+"%",transition:"width 0.3s"}})),
+      at&&cd.tT&&e("div",{style:{textAlign:"center",marginBottom:8,fontSize:12,color:"#999",letterSpacing:1,textTransform:"uppercase"}},cd.tT),
+      e("div",{style:{background:"#fff",borderRadius:20,padding:"36px 32px",boxShadow:"0 8px 40px rgba(0,0,0,0.08)",marginBottom:24,borderTop:"4px solid "+cl}},
+        e("div",{style:{fontSize:19,fontWeight:600,lineHeight:1.6,marginBottom:24,whiteSpace:"pre-line"}},mc?cd.q.split("\n")[0]:cd.q),
+        mc?e("div",{style:{display:"flex",flexDirection:"column",gap:10}},opts.map(function(o){var ic=o.t.toLowerCase()===cd.a.toLowerCase();var is=ua===o.t;var bg="#f8f8f8",bd="2px solid #e8e8e8";if(qr){if(ic){bg="#e8f5e9";bd="2px solid #4caf50"}else if(is&&!ic){bg="#ffebee";bd="2px solid #e53935"}}else if(is){bg="#e3f2fd";bd="2px solid "+cl}return e("button",{key:o.l,disabled:!!qr,onClick:function(){sUA(o.t)},style:{padding:"14px 18px",borderRadius:12,border:bd,background:bg,cursor:qr?"default":"pointer",textAlign:"left",fontSize:16,fontWeight:500,transition:"all 0.15s",display:"flex",alignItems:"center",gap:12}},e("span",{style:{width:28,height:28,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",background:is?cl:"#e0e0e0",color:is?"#fff":"#999",fontSize:13,fontWeight:700,flexShrink:0}},o.l),o.t)})):
+        e("input",{value:ua,onChange:function(ev){sUA(ev.target.value)},disabled:!!qr,placeholder:"Введи ответ...",autoFocus:true,style:{width:"100%",padding:"14px 18px",fontSize:18,borderRadius:12,border:"2px solid "+(qr==="c"?"#4caf50":qr==="w"?"#e53935":"#e0e0e0"),outline:"none",background:qr==="c"?"#e8f5e9":qr==="w"?"#ffebee":"#fafafa",transition:"all 0.2s",boxSizing:"border-box"}}),
+        qr==="w"&&e("div",{style:{marginTop:16,padding:"12px 16px",background:"#ffebee",borderRadius:10,fontSize:15}},"Ответ: ",e("strong",null,cd.a)),
+        qr==="w"&&cd.rule&&e(RB,{text:cd.rule}),
+        qr==="c"&&e("div",{style:{marginTop:16,padding:"12px 16px",background:"#e8f5e9",borderRadius:10,fontSize:15,color:"#2e7d32"}},"✓ Правильно! ",e("span",{style:{fontSize:13,color:"#888"}},cd.hint)),
+        !sh&&!qr&&e("button",{onClick:function(){sSH(true)},style:{marginTop:12,background:"none",border:"none",cursor:"pointer",fontSize:13,color:"#bbb"}},"💡 Подсказка"),
+        sh&&!qr&&e("div",{style:{marginTop:12,fontSize:13,color:"#999",fontStyle:"italic"}},"💡 "+cd.hint)),
+      e("div",{style:{display:"flex",justifyContent:"center"}},!qr?e("button",{onClick:chk,disabled:!ua.trim(),style:{padding:"14px 48px",borderRadius:12,border:"none",background:ua.trim()?cl:"#ccc",color:"#fff",cursor:ua.trim()?"pointer":"default",fontWeight:700,fontSize:16}},"Проверить"):e("button",{onClick:nxt,style:{padding:"14px 48px",borderRadius:12,border:"none",background:cl,color:"#fff",cursor:"pointer",fontWeight:700,fontSize:16}},ci+1>=qc.length?"Результаты":"Далее →")),
+      e("div",{style:{textAlign:"center",marginTop:14,fontSize:12,color:"#ccc"}},"Enter — проверить / далее")))}
 
-  function checkAnswer(){
-    var card=quizCards[cardIdx];
-    var ok=userAnswer.trim().toLowerCase()===card.a.toLowerCase()||card.a.toLowerCase().split("/").some(function(v){return userAnswer.trim().toLowerCase()===v.trim()});
-    setQuizResult(ok?"correct":"wrong");
-    setScore(function(s){return{correct:s.correct+(ok?1:0),wrong:s.wrong+(ok?0:1),answers:s.answers.concat([{card:card,userAnswer:userAnswer.trim(),correct:ok}])}});
-  }
-
-  function nextQuizCard(){
-    if(cardIdx+1>=quizCards.length){
-      var pct=Math.round((score.correct/quizCards.length)*100);
-      if(topicId)setTopicScores(function(s){var n={};for(var k in s)n[k]=s[k];n[topicId]=Math.max(s[topicId]||0,pct);return n});
-      setMode("results");
-    }else{setCardIdx(function(i){return i+1});setUserAnswer("");setQuizResult(null);setShowHint(false)}
-  }
-
-  var handleKeyDown=uc(function(ev){
-    if(mode==="quiz"&&ev.key==="Enter"){if(quizResult)nextQuizCard();else if(userAnswer.trim())checkAnswer()}
-    if(mode==="learn"){
-      if(ev.key===" "||ev.key==="Enter"){ev.preventDefault();setFlipped(function(f){return!f})}
-      if(ev.key==="ArrowRight"&&cardIdx<cards.length-1){setCardIdx(function(i){return i+1});setFlipped(false);setShowHint(false)}
-      if(ev.key==="ArrowLeft"&&cardIdx>0){setCardIdx(function(i){return i-1});setFlipped(false);setShowHint(false)}
-    }
-  },[mode,quizResult,userAnswer,cardIdx,cards.length]);
-
-  ue(function(){window.addEventListener("keydown",handleKeyDown);return function(){window.removeEventListener("keydown",handleKeyDown)}},[handleKeyDown]);
-
-  var CS={container:{minHeight:"100vh",padding:20}};
-
-  if(mode==="menu") return e("div",{style:CS.container},
-    e("div",{style:{maxWidth:720,margin:"0 auto"}},
-      e("div",{style:{textAlign:"center",marginBottom:32}},
-        e("div",{style:{fontSize:42,fontWeight:800,letterSpacing:-1,color:"#1a1a1a",marginBottom:4}},"\u{1F1F5}\u{1F1F1} Polski Trener"),
-        e("div",{style:{fontSize:15,color:"#888",letterSpacing:2,textTransform:"uppercase"}},"Грамматика A1–B1 — карточки и квиз")
-      ),
-      e("button",{onClick:startAllQuiz,style:{width:"100%",padding:"16px 24px",marginBottom:28,background:"linear-gradient(135deg,#2d6a4f,#40916c)",color:"#fff",border:"none",borderRadius:14,cursor:"pointer",fontSize:17,fontWeight:700,boxShadow:"0 4px 20px rgba(45,106,79,0.3)"}},"🎲 Случайный квиз — 20 вопросов из всех тем"),
-      e("div",{style:{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))",gap:12}},
-        TOPICS.map(function(t){
-          var best=topicScores[t.id];
-          return e("div",{key:t.id,style:{background:"#fff",borderRadius:14,padding:"16px 18px",boxShadow:"0 2px 12px rgba(0,0,0,0.06)",border:"2px solid "+(best>=80?"#c8e6c9":best>=50?"#fff3e0":"transparent")}},
-            e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}},
-              e("div",null,e("span",{style:{fontSize:20,marginRight:8}},t.icon),e("span",{style:{fontWeight:700,fontSize:14,color:t.color}},t.title)),
-              best!==undefined&&e("div",{style:{position:"relative",display:"flex",alignItems:"center",justifyContent:"center"}},e(ProgressRing,{pct:best/100,color:best>=80?"#4caf50":best>=50?"#ff9800":"#e53935"}),e("span",{style:{position:"absolute",fontSize:11,fontWeight:700,color:"#555"}},best+"%"))
-            ),
-            e("div",{style:{fontSize:12,color:"#999",marginBottom:12}},t.cards.length+" карточек"),
-            e("div",{style:{display:"flex",gap:8}},
-              e("button",{onClick:function(){startLearn(t.id)},style:{flex:1,padding:"8px 0",border:"1.5px solid "+t.color,background:"transparent",color:t.color,borderRadius:8,cursor:"pointer",fontWeight:600,fontSize:13}},"📖 Учить"),
-              e("button",{onClick:function(){startQuiz(t.id)},style:{flex:1,padding:"8px 0",border:"none",background:t.color,color:"#fff",borderRadius:8,cursor:"pointer",fontWeight:600,fontSize:13}},"✏️ Квиз")
-            )
-          );
-        })
-      )
-    )
-  );
-
-  if(mode==="learn"){
-    var card=cards[cardIdx],color=topic.color;
-    return e("div",{style:CS.container},
-      e("div",{style:{maxWidth:560,margin:"0 auto"}},
-        e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}},
-          e("button",{onClick:function(){setMode("menu")},style:{background:"none",border:"none",cursor:"pointer",fontSize:15,color:"#888",fontWeight:600}},"← Назад"),
-          e("span",{style:{fontSize:14,color:"#aaa"}},(cardIdx+1)+" / "+cards.length)
-        ),
-        e("div",{style:{textAlign:"center",marginBottom:8}},e("span",{style:{fontSize:28}},topic.icon),e("span",{style:{fontSize:18,fontWeight:700,color:color,marginLeft:10}},topic.title)),
-        e("div",{style:{height:4,background:"#e0e0e0",borderRadius:2,marginBottom:28}},e("div",{style:{height:4,background:color,borderRadius:2,width:((cardIdx+1)/cards.length*100)+"%",transition:"width 0.3s"}})),
-        e("div",{onClick:function(){setFlipped(function(f){return!f})},style:{background:flipped?color:"#fff",color:flipped?"#fff":"#2d2d2d",borderRadius:20,padding:"48px 36px",minHeight:220,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",cursor:"pointer",boxShadow:"0 8px 40px rgba(0,0,0,0.1)",transition:"all 0.35s ease"}},
-          !flipped?e(React.Fragment,null,e("div",{style:{fontSize:20,fontWeight:600,lineHeight:1.6,textAlign:"center",whiteSpace:"pre-line"}},card.q),e("div",{style:{marginTop:20,fontSize:13,color:"#bbb"}},"Нажми, чтобы увидеть ответ")):
-          e(React.Fragment,null,e("div",{style:{fontSize:13,opacity:0.7,marginBottom:10,textTransform:"uppercase",letterSpacing:1}},"Ответ"),e("div",{style:{fontSize:28,fontWeight:800,textAlign:"center"}},card.a),e("div",{style:{fontSize:14,opacity:0.8,marginTop:16,textAlign:"center",fontStyle:"italic"}},card.hint))
-        ),
-        !flipped&&e("div",{style:{textAlign:"center",marginTop:16}},e("button",{onClick:function(ev){ev.stopPropagation();setShowHint(function(h){return!h})},style:{background:"none",border:"none",cursor:"pointer",fontSize:13,color:"#aaa"}},showHint?"💡 "+card.hint:"💡 Подсказка")),
-        flipped&&card.rule&&e(RuleBox,{text:card.rule}),
-        e("div",{style:{display:"flex",justifyContent:"center",gap:16,marginTop:28}},
-          e("button",{disabled:cardIdx===0,onClick:function(){setCardIdx(function(i){return i-1});setFlipped(false);setShowHint(false)},style:{padding:"12px 28px",borderRadius:10,border:"1.5px solid #ddd",background:"#fff",cursor:cardIdx===0?"default":"pointer",opacity:cardIdx===0?0.4:1,fontWeight:600,fontSize:15}},"◀ Назад"),
-          e("button",{disabled:cardIdx===cards.length-1,onClick:function(){setCardIdx(function(i){return i+1});setFlipped(false);setShowHint(false)},style:{padding:"12px 28px",borderRadius:10,border:"none",background:color,color:"#fff",cursor:cardIdx===cards.length-1?"default":"pointer",opacity:cardIdx===cards.length-1?0.4:1,fontWeight:600,fontSize:15}},"Далее ▶")
-        ),
-        e("div",{style:{textAlign:"center",marginTop:20,fontSize:12,color:"#bbb"}},"Пробел — перевернуть · ← → — навигация")
-      )
-    );
-  }
-
-  if(mode==="quiz"){
-    var card=quizCards[cardIdx],color=allTopicsMode?"#2d6a4f":topic.color;
-    var isMC=card.q.includes("(a)")||card.q.includes("(b)");
-    var options=[];
-    if(isMC){var m=card.q.split("\n").slice(1).join(" ").match(/\(([a-c])\)\s*([^(]+)/g);if(m)options=m.map(function(x){var r=x.match(/\(([a-c])\)\s*(.+)/);return r?{letter:r[1],text:r[2].trim()}:null}).filter(Boolean)}
-
-    return e("div",{style:CS.container},
-      e("div",{style:{maxWidth:560,margin:"0 auto"}},
-        e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}},
-          e("button",{onClick:function(){setMode("menu")},style:{background:"none",border:"none",cursor:"pointer",fontSize:15,color:"#888",fontWeight:600}},"← Выйти"),
-          e("div",{style:{display:"flex",alignItems:"center",gap:12}},
-            e("span",{style:{fontSize:14,color:"#4caf50",fontWeight:700}},"✓ "+score.correct),
-            e("span",{style:{fontSize:14,color:"#e53935",fontWeight:700}},"✗ "+score.wrong),
-            e("span",{style:{fontSize:14,color:"#aaa"}},(cardIdx+1)+"/"+quizCards.length)
-          )
-        ),
-        e("div",{style:{height:4,background:"#e0e0e0",borderRadius:2,marginBottom:28}},e("div",{style:{height:4,background:color,borderRadius:2,width:((cardIdx+1)/quizCards.length*100)+"%",transition:"width 0.3s"}})),
-        allTopicsMode&&card.topicTitle&&e("div",{style:{textAlign:"center",marginBottom:8,fontSize:12,color:"#999",letterSpacing:1,textTransform:"uppercase"}},card.topicTitle),
-        e("div",{style:{background:"#fff",borderRadius:20,padding:"36px 32px",boxShadow:"0 8px 40px rgba(0,0,0,0.08)",marginBottom:24,borderTop:"4px solid "+color}},
-          e("div",{style:{fontSize:19,fontWeight:600,lineHeight:1.6,marginBottom:24,whiteSpace:"pre-line"}},isMC?card.q.split("\n")[0]:card.q),
-          isMC?e("div",{style:{display:"flex",flexDirection:"column",gap:10}},
-            options.map(function(opt){
-              var isCorr=opt.text.trim().toLowerCase()===card.a.toLowerCase();
-              var isSel=userAnswer===opt.text.trim();
-              var bg="#f8f8f8",brd="2px solid #e8e8e8";
-              if(quizResult){if(isCorr){bg="#e8f5e9";brd="2px solid #4caf50"}else if(isSel&&!isCorr){bg="#ffebee";brd="2px solid #e53935"}}else if(isSel){bg="#e3f2fd";brd="2px solid "+color}
-              return e("button",{key:opt.letter,disabled:!!quizResult,onClick:function(){setUserAnswer(opt.text.trim())},style:{padding:"14px 18px",borderRadius:12,border:brd,background:bg,cursor:quizResult?"default":"pointer",textAlign:"left",fontSize:16,fontWeight:500,transition:"all 0.15s",display:"flex",alignItems:"center",gap:12}},
-                e("span",{style:{width:28,height:28,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",background:isSel?color:"#e0e0e0",color:isSel?"#fff":"#999",fontSize:13,fontWeight:700,flexShrink:0}},opt.letter),
-                opt.text.trim()
-              );
-            })
-          ):e("input",{value:userAnswer,onChange:function(ev){setUserAnswer(ev.target.value)},disabled:!!quizResult,placeholder:"Введи ответ...",autoFocus:true,style:{width:"100%",padding:"14px 18px",fontSize:18,borderRadius:12,border:"2px solid "+(quizResult==="correct"?"#4caf50":quizResult==="wrong"?"#e53935":"#e0e0e0"),outline:"none",background:quizResult==="correct"?"#e8f5e9":quizResult==="wrong"?"#ffebee":"#fafafa",transition:"all 0.2s",boxSizing:"border-box"}}),
-          quizResult==="wrong"&&e("div",{style:{marginTop:16,padding:"12px 16px",background:"#ffebee",borderRadius:10,fontSize:15}},"Правильный ответ: ",e("strong",null,card.a)),
-          quizResult==="wrong"&&card.rule&&e(RuleBox,{text:card.rule}),
-          quizResult==="correct"&&e("div",{style:{marginTop:16,padding:"12px 16px",background:"#e8f5e9",borderRadius:10,fontSize:15,color:"#2e7d32"}},"✓ Правильно! ",e("span",{style:{fontSize:13,color:"#888"}},card.hint)),
-          !showHint&&!quizResult&&e("button",{onClick:function(){setShowHint(true)},style:{marginTop:12,background:"none",border:"none",cursor:"pointer",fontSize:13,color:"#bbb"}},"💡 Подсказка"),
-          showHint&&!quizResult&&e("div",{style:{marginTop:12,fontSize:13,color:"#999",fontStyle:"italic"}},"💡 "+card.hint)
-        ),
-        e("div",{style:{display:"flex",justifyContent:"center"}},
-          !quizResult?e("button",{onClick:checkAnswer,disabled:!userAnswer.trim(),style:{padding:"14px 48px",borderRadius:12,border:"none",background:userAnswer.trim()?color:"#ccc",color:"#fff",cursor:userAnswer.trim()?"pointer":"default",fontWeight:700,fontSize:16,boxShadow:userAnswer.trim()?"0 4px 20px "+color+"44":"none"}},"Проверить"):
-          e("button",{onClick:nextQuizCard,style:{padding:"14px 48px",borderRadius:12,border:"none",background:color,color:"#fff",cursor:"pointer",fontWeight:700,fontSize:16,boxShadow:"0 4px 20px "+color+"44"}},cardIdx+1>=quizCards.length?"Результаты":"Далее →")
-        ),
-        e("div",{style:{textAlign:"center",marginTop:14,fontSize:12,color:"#ccc"}},"Enter — проверить / далее")
-      )
-    );
-  }
-
-  if(mode==="results"){
-    var total=score.correct+score.wrong;
-    var pct=Math.round((score.correct/total)*100);
-    var emoji=pct>=90?"🏆":pct>=70?"👍":pct>=50?"💪":"📚";
-    var message=pct>=90?"Отлично!":pct>=70?"Хороший результат!":pct>=50?"Неплохо, но есть над чем поработать":"Стоит повторить эту тему";
-    var wrongs=score.answers.filter(function(a){return!a.correct});
-    return e("div",{style:CS.container},
-      e("div",{style:{maxWidth:560,margin:"0 auto"}},
-        e("div",{style:{textAlign:"center",marginBottom:32}},
-          e("div",{style:{fontSize:64,marginBottom:8}},emoji),
-          e("div",{style:{fontSize:48,fontWeight:800,color:pct>=70?"#2d6a4f":pct>=50?"#e36414":"#d62828"}},pct+"%"),
-          e("div",{style:{fontSize:18,fontWeight:600,color:"#555",marginBottom:4}},message),
-          e("div",{style:{fontSize:14,color:"#aaa"}},score.correct+" из "+total+" правильно")
-        ),
-        wrongs.length>0&&e("div",{style:{marginBottom:28}},
-          e("div",{style:{fontSize:15,fontWeight:700,color:"#d62828",marginBottom:12}},"Ошибки — повтори:"),
-          wrongs.map(function(a,i){
-            return e("div",{key:i,style:{background:"#fff",borderRadius:12,padding:"14px 18px",marginBottom:12,borderLeft:"4px solid #e53935",boxShadow:"0 2px 8px rgba(0,0,0,0.04)"}},
-              e("div",{style:{fontSize:14,color:"#555",marginBottom:6}},a.card.q.split("\n")[0]),
-              e("div",{style:{fontSize:13,marginBottom:4}},
-                e("span",{style:{color:"#e53935",textDecoration:"line-through"}},a.userAnswer),
-                e("span",{style:{margin:"0 8px",color:"#ccc"}},"→"),
-                e("span",{style:{color:"#2e7d32",fontWeight:700}},a.card.a)
-              ),
-              a.card.rule&&e(RuleBox,{text:a.card.rule})
-            );
-          })
-        ),
-        e("div",{style:{display:"flex",gap:12}},
-          e("button",{onClick:function(){setMode("menu")},style:{flex:1,padding:14,borderRadius:12,border:"2px solid #ddd",background:"#fff",cursor:"pointer",fontWeight:700,fontSize:15}},"К темам"),
-          e("button",{onClick:function(){if(allTopicsMode)startAllQuiz();else startQuiz(topicId)},style:{flex:1,padding:14,borderRadius:12,border:"none",background:"#2d6a4f",color:"#fff",cursor:"pointer",fontWeight:700,fontSize:15}},"Ещё раз")
-        )
-      )
-    );
-  }
+  if(md==="res"){var tot=sc.c+sc.w;var pct=Math.round((sc.c/tot)*100);
+    var emo=pct>=90?"🏆":pct>=70?"👍":pct>=50?"💪":"📚";
+    var msg=pct>=90?"Отлично!":pct>=70?"Хорошо!":pct>=50?"Есть над чем работать":"Повтори тему";
+    var wr=sc.a.filter(function(a){return!a.ok});
+    return e("div",{style:S.c},e("div",{style:{maxWidth:560,margin:"0 auto"}},
+      e("div",{style:{textAlign:"center",marginBottom:32}},e("div",{style:{fontSize:64,marginBottom:8}},emo),e("div",{style:{fontSize:48,fontWeight:800,color:pct>=70?"#2d6a4f":pct>=50?"#e36414":"#d62828"}},pct+"%"),e("div",{style:{fontSize:18,fontWeight:600,color:"#555",marginBottom:4}},msg),e("div",{style:{fontSize:14,color:"#aaa"}},sc.c+" из "+tot)),
+      wr.length>0&&e("div",{style:{marginBottom:28}},e("div",{style:{fontSize:15,fontWeight:700,color:"#d62828",marginBottom:12}},"Ошибки:"),wr.map(function(a,i){return e("div",{key:i,style:{background:"#fff",borderRadius:12,padding:"14px 18px",marginBottom:12,borderLeft:"4px solid #e53935",boxShadow:"0 2px 8px rgba(0,0,0,0.04)"}},e("div",{style:{fontSize:14,color:"#555",marginBottom:6}},a.cd.q.split("\n")[0]),e("div",{style:{fontSize:13,marginBottom:4}},e("span",{style:{color:"#e53935",textDecoration:"line-through"}},a.ua),e("span",{style:{margin:"0 8px",color:"#ccc"}},"→"),e("span",{style:{color:"#2e7d32",fontWeight:700}},a.cd.a)),a.cd.rule&&e(RB,{text:a.cd.rule}))})),
+      e("div",{style:{display:"flex",gap:12}},e("button",{onClick:function(){sM("menu")},style:{flex:1,padding:14,borderRadius:12,border:"2px solid #ddd",background:"#fff",cursor:"pointer",fontWeight:700,fontSize:15}},"К темам"),e("button",{onClick:function(){if(at)sAQ();else sQ(tId)},style:{flex:1,padding:14,borderRadius:12,border:"none",background:"#2d6a4f",color:"#fff",cursor:"pointer",fontWeight:700,fontSize:15}},"Ещё раз"))))}
   return null;
 }
-
 ReactDOM.createRoot(document.getElementById("root")).render(e(App));
 </script>
 </body>
